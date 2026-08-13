@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminOrderController;
 
 // Landing Page (Sekarang menggunakan HomeController)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -31,14 +30,6 @@ Route::middleware(['auth', 'role:admin,guru'])->prefix('dashboard/admin')->group
     Route::patch('/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.order.updateStatus');
     Route::patch('/stock/{id}', [AdminController::class, 'updateStock'])->name('admin.stock.update');
 });
-
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    // Route pesanan admin
-    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
-    Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
-    Route::patch('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.update-status');
-});
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/order/{id}/receipt', [SiswaController::class, 'printReceipt'])->name('order.receipt');
