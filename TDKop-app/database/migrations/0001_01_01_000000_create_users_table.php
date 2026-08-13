@@ -6,17 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('nis')->nullable()->unique(); // Nullable untuk Guru/Admin
+            $table->string('class')->nullable();         // Nullable untuk Guru/Admin (e.g. X RPL 1)
+            $table->string('major')->nullable();         // Nullable untuk Guru/Admin (e.g. RPL, TKJ)
+            $table->string('username')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['siswa', 'admin', 'guru'])->default('siswa');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -37,9 +39,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');
