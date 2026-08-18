@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -17,6 +18,32 @@ class Product extends Model
         'image',
         'is_active',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Product $product) {
+            if (empty($product->slug) && ! empty($product->name)) {
+                $product->slug = Str::slug($product->name);
+            }
+
+            if (! empty($product->slug)) {
+                $baseSlug = $product->slug;
+                $slug = $baseSlug;
+                $counter = 1;
+
+                while (
+                    static::where('slug', $slug)
+                        ->when($product->exists, fn ($query) => $query->whereKeyNot($product->getKey()))
+                        ->exists()
+                ) {
+                    $slug = "{$baseSlug}-{$counter}";
+                    $counter++;
+                }
+
+                $product->slug = $slug;
+            }
+        });
+    }
 
     public function category(): BelongsTo
     {

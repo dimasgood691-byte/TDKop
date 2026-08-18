@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         // 1. Seed Users (Siswa & Admin/Guru)
         $admin = User::create([
             'name'     => 'Guru Pembina Koperasi',
-            'username' => 'admin_tdkop',
+            'username' => 'pak hasan',
             'email'    => 'admin@smk8.sch.id',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('123'),
             'role'     => 'admin',
         ]);
 

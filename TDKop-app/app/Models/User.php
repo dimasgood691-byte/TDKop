@@ -20,6 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'points', // Tambahkan kolom ini
     ];
 
     protected $hidden = [
@@ -37,7 +38,7 @@ class User extends Authenticatable
 
     public function orders(): HasMany
     {
-        return $table = $this->hasMany(Order::class);
+        return $this->hasMany(Order::class);
     }
 
     public function isAdmin(): bool

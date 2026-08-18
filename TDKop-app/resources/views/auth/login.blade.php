@@ -10,11 +10,14 @@
             <div class="pointer-events-none absolute -bottom-32 -left-16 w-72 h-72 bg-white/5 rounded-full"></div>
 
             <!-- Logo & Nama Sekolah -->
+            <!-- Logo & Nama Sekolah -->
             <a href="{{ url('/') }}" class="relative z-10 flex items-center gap-3 w-fit group">
-                <div class="bg-white/15 border border-white/20 backdrop-blur-sm p-3 rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white/25">
-                    <div class="bg-white text-tdkop-primary font-bold text-lg w-9 h-9 rounded-lg flex items-center justify-center">
-                        TDK
-                    </div>
+                <div class="bg-white/15 border border-white/20 backdrop-blur-sm p-2 rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white/25">
+                    <!-- Mengganti div huruf TDK dengan gambar logo -->
+                    <img
+                        src="{{ asset('images/logo-smkn-8-jkt.png') }}"
+                        alt="Logo SMKN 8 Jakarta"
+                        class="w-9 h-9 object-contain">
                 </div>
                 <div>
                     <h2 class="text-white font-bold text-base leading-tight transition-colors duration-300 group-hover:text-blue-100">SMK Negeri 8 Jakarta</h2>
@@ -34,7 +37,11 @@
                 <div class="space-y-4">
                     <div class="flex items-start gap-3 transition-transform duration-300 hover:translate-x-1">
                         <div class="bg-white/15 border border-white/20 p-2.5 rounded-xl shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                                <path d="M3 6h18" />
+                                <path d="M16 10a4 4 0 0 1-8 0" />
+                            </svg>
                         </div>
                         <div>
                             <h3 class="text-white font-semibold text-sm">Belanja Tanpa Antre</h3>
@@ -44,7 +51,10 @@
 
                     <div class="flex items-start gap-3 transition-transform duration-300 hover:translate-x-1">
                         <div class="bg-white/15 border border-white/20 p-2.5 rounded-xl shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <path d="M9 8h6M9 12h6M9 16h4" />
+                            </svg>
                         </div>
                         <div>
                             <h3 class="text-white font-semibold text-sm">Stok Real-time</h3>
@@ -54,7 +64,10 @@
 
                     <div class="flex items-start gap-3 transition-transform duration-300 hover:translate-x-1">
                         <div class="bg-white/15 border border-white/20 p-2.5 rounded-xl shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18" />
+                                <path d="m19 9-5 5-4-4-3 3" />
+                            </svg>
                         </div>
                         <div>
                             <h3 class="text-white font-semibold text-sm">Riwayat Pesanan</h3>
@@ -101,13 +114,21 @@
                     <button type="button" @click="role = 'siswa'"
                         :class="role === 'siswa' ? 'bg-white text-tdkop-navy shadow-sm' : 'text-slate-500 hover:text-slate-700'"
                         class="flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-all duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5" />
+                        </svg>
                         Siswa
                     </button>
                     <button type="button" @click="role = 'admin'"
                         :class="role === 'admin' ? 'bg-white text-tdkop-navy shadow-sm' : 'text-slate-500 hover:text-slate-700'"
                         class="flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-all duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
                         Admin / Staff
                     </button>
                 </div>
@@ -124,7 +145,11 @@
                         </label>
                         <div class="relative">
                             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/><path d="M6 16h4"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                    <path d="M2 8h20" />
+                                    <path d="M6 16h4" />
+                                </svg>
                             </span>
                             <input type="text" name="username" required
                                 :placeholder="role === 'siswa' ? 'Masukkan NIS' : 'Masukkan NIP'"
@@ -142,7 +167,10 @@
                         </label>
                         <div class="relative">
                             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
                             </span>
                             <input :type="showPassword ? 'text' : 'password'" name="password" required placeholder="••••••••"
                                 class="w-full pl-10 pr-11 py-2.5 border border-slate-300 rounded-xl text-sm outline-none
@@ -151,8 +179,15 @@
                                        focus:ring-2 focus:ring-tdkop-primary/40 focus:border-tdkop-primary focus:scale-[1.02] focus:shadow-md">
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-tdkop-primary transition-all duration-300 hover:scale-125">
-                                <svg x-show="!showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                                <svg x-show="showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a13.16 13.16 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/><path d="M6.06 6.06A13.9 13.9 0 0 0 2 11s3.5 7 10 7a9.14 9.14 0 0 0 5-1.5"/></svg>
+                                <svg x-show="!showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                                <svg x-show="showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 7 10 7a13.16 13.16 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                    <path d="M1 1l22 22" />
+                                    <path d="M6.06 6.06A13.9 13.9 0 0 0 2 11s3.5 7 10 7a9.14 9.14 0 0 0 5-1.5" />
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -163,7 +198,7 @@
                             <input type="checkbox" name="remember" class="rounded border-slate-300 text-tdkop-primary focus:ring-tdkop-primary/40 transition-all duration-300">
                             Ingat saya
                         </label>
-                        <a href="#" class="text-tdkop-primary font-medium hover:text-tdkop-navy transition-all duration-300 hover:underline">
+                        <a href="{{ route('password.request') }}" class="text-tdkop-primary font-medium hover:text-tdkop-navy transition-all duration-300 hover:underline">
                             Lupa kata sandi?
                         </a>
                     </div>
@@ -173,7 +208,11 @@
                         class="w-full flex items-center justify-center gap-2 bg-tdkop-primary text-white py-3 rounded-xl font-semibold
                                transition-all duration-300 hover:scale-[1.02] active:scale-95 hover:-translate-y-0.5
                                hover:bg-tdkop-navy shadow-md hover:shadow-xl hover:shadow-blue-900/25">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                            <path d="M10 17l5-5-5-5" />
+                            <path d="M15 12H3" />
+                        </svg>
                         Masuk
                     </button>
                 </form>

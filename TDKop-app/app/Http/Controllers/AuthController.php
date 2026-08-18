@@ -9,25 +9,53 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLogin() { return view('auth.login'); }
-    
-    public function login(Request $request)
+    public function showLogin()
     {
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-            return redirect()->intended($user->role === 'siswa' ? 'dashboard/siswa' : 'dashboard/admin');
-        }
-
-        return back()->withErrors(['username' => 'Username atau password salah.']);
+        return view('auth.login');
     }
 
-    public function showRegister() { return view('auth.register'); }
+    public function login(Request $request)
+    {
+        // 1. Validasi input termasuk field 'role' dari form
+        $request->validate([
+            'username' => ['required'],
+            'password' => ['required'],
+            'role'     => ['required', 'string'],
+        ]);
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $selectedRole = $request->input('role');
+        $remember = $request->has('remember');
+
+        // 2. Jika user memilih tab Admin/Staff, izinkan login untuk role 'admin' ATAU 'guru'
+        if ($selectedRole === 'admin') {
+            $authenticated = Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'admin'], $remember)
+                || Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'guru'], $remember);
+
+            if ($authenticated) {
+                $request->session()->regenerate();
+                return redirect()->intended('dashboard/admin');
+            }
+        }
+        // 3. Jika user memilih tab Siswa, pastikan role di DB adalah 'siswa'
+        else {
+            if (Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'siswa'], $remember)) {
+                $request->session()->regenerate();
+                return redirect()->intended('dashboard/siswa');
+            }
+        }
+
+        // 4. Jika username/password salah ATAU role tidak cocok
+        return back()->withErrors([
+            'username' => 'Username, kata sandi, atau peran (role) yang dipilih tidak cocok.'
+        ])->onlyInput('username');
+    }
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
 
     public function register(Request $request)
     {
