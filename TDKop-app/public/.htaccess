@@ -5,21 +5,67 @@
 
     RewriteEngine On
 
-    # Handle Authorization Header
+    # 1. CEGAH AKSES KE FILE SENSITIF & DOTFILES (.env, .git, .htaccess, dll)
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\." - [F]
+
+    # 2. HANDLE AUTHORIZATION HEADER
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Handle X-XSRF-Token Header
+    # 3. HANDLE X-XSRF-TOKEN HEADER
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # 4. REDIRECT TRAILING SLASHES IF NOT A FOLDER...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # 5. SEND REQUESTS TO FRONT CONTROLLER...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# ==============================================================================
+# BENTENG KEAMANAN EXTRA (SECURITY HEADERS & BLOKIR FILE DANGEROUS)
+# ==============================================================================
+
+# A. MENCEGAH SERANGAN CLICKJACKING & MIME SNIFFING
+<IfModule mod_headers.c>
+    # Mencegah web di-embed di dalam <iframe> milik web lain (Clickjacking)
+    Header set X-Frame-Options "SAMEORIGIN"
+    # Mencegah browser menebak-nebak tipe file (MIME-Sniffing Attack)
+    Header set X-Content-Type-Options "nosniff"
+    # Mencegah kebocoran URL asal saat pindah halaman
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    # Proteksi XSS otomatis di browser tua
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# B. BLOKIR EKSEKUSI SCRIPT BERBAHAYA (PHP/EXE) DI FOLDER STORAGE / UPLOAD FOTO
+# (Menolak file .php atau .sh jika ada yang berhasil menembus upload foto)
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|cgi|pl|exe)$">
+    <IfModule mod_authz_core.c>
+        # Untuk Apache 2.4+
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        # Untuk Apache versi lama
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# C. LINDUNGI FILE LOG, CONFIG, DAN BACKUP
+<FilesMatch "\.(env|json|config|log|md|sql|bak|swp)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

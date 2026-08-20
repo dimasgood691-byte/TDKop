@@ -79,15 +79,16 @@
             </div>
         </div>
     </nav>
+
     <!-- Hero Section -->
     <section class="relative overflow-hidden bg-gradient-to-b from-white via-sky-50/60 to-slate-50 py-24 md:py-36">
-        <!-- BACKGROUND ASLI (TIDAK DIUBAH SAMA SEKALIKAN) -->
+        <!-- BACKGROUND ASLI -->
         <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(14,165,233,0.22)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,165,233,0.22)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none" style="mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 85%); -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 85%);"></div>
 
         <div class="absolute -top-32 -left-32 w-96 h-96 bg-sky-400/20 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute top-1/2 -right-32 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- KONTEN HERO SECTION (DITINGKATKAN) -->
+        <!-- KONTEN HERO SECTION -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10" data-aos="fade-up">
 
             <!-- Interactive Pill Tag -->
@@ -120,8 +121,8 @@
                 </a>
 
                 <!-- Secondary CTA -->
-                <a href="{{ route('login') }}" class="bg-white/80 hover:bg-white text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-sky-300 px-7 py-4 rounded-2xl font-bold text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 shadow-xs w-full sm:w-auto flex items-center justify-center gap-2">
-                    <span>Masuk Akun</span>
+                <a href="{{ route('register') }}" class="bg-white/80 hover:bg-white text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-sky-300 px-7 py-4 rounded-2xl font-bold text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 shadow-xs w-full sm:w-auto flex items-center justify-center gap-2">
+                    <span>Daftar Sekarang</span>
                     <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
@@ -129,6 +130,7 @@
             </div>
         </div>
     </section>
+
     <!-- Katalog Section -->
     <section id="katalog" class="py-16 md:py-24 bg-gradient-to-b from-slate-50 via-slate-100/50 to-slate-50 min-h-screen relative overflow-hidden" x-data="{ selectedProduct: null, showModal: false, showImageModal: false, selectedImage: '' }">
         <!-- Subtle Background Glows -->
@@ -231,6 +233,16 @@
                                 <p class="text-slate-500 text-xs leading-relaxed mt-2 line-clamp-2 min-h-[2.25rem]">
                                     {{ $product->description }}
                                 </p>
+
+                                    <div class="flex flex-wrap gap-1.5 mt-3">
+                                        @forelse($product->stocks as $stock)
+                                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg border {{ $stock->size->gender_label === 'Laki-laki' ? 'bg-sky-50 text-sky-700 border-sky-100' : ($stock->size->gender_label === 'Perempuan' ? 'bg-pink-50 text-pink-700 border-pink-100' : 'bg-slate-50 text-slate-600 border-slate-200') }}">
+                                            {{ $stock->size->display_name }}
+                                        </span>
+                                        @empty
+                                        <span class="text-[10px] text-slate-400">Ukuran belum tersedia</span>
+                                        @endforelse
+                                    </div>
                             </div>
                         </div>
 
@@ -273,11 +285,11 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+            class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
             style="display: none;">
 
-            <div @click.away="showModal = false" class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative border border-slate-100 max-h-[90vh] overflow-y-auto">
-                <button @click="showModal = false" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold transition-all duration-200 flex items-center justify-center">✕</button>
+            <div @click.away="showModal = false" class="relative z-10 bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+                <button @click.stop="showModal = false" class="absolute top-5 right-5 z-20 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold transition-all duration-200 flex items-center justify-center">✕</button>
 
                 <template x-if="selectedProduct">
                     <div>
@@ -326,10 +338,10 @@
                         <!-- Stock List -->
                         <div class="space-y-2 max-h-44 overflow-y-auto pr-1">
                             <template x-for="item in selectedProduct.stocks" :key="item.id">
-                                <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm hover:bg-slate-100/80 transition-colors">
-                                    <span class="font-bold text-slate-700" x-text="'Ukuran ' + item.size.name"></span>
+                                <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm hover:bg-slate-100/80 transition-colors gap-3">
+                                    <span class="font-bold text-slate-700" x-text="'Ukuran ' + item.size.name + ' (' + (item.size.gender === 'laki-laki' ? 'Laki-laki' : item.size.gender === 'perempuan' ? 'Perempuan' : 'Umum') + ')' "></span>
                                     <span :class="item.stock > 0 ? 'bg-emerald-100/80 text-emerald-800 border-emerald-200' : 'bg-rose-100/80 text-rose-700 border-rose-200'"
-                                        class="px-3 py-1 rounded-lg text-xs font-extrabold border"
+                                        class="px-3 py-1 rounded-lg text-xs font-extrabold border whitespace-nowrap"
                                         x-text="item.stock > 0 ? item.stock + ' Pcs' : 'Habis'"></span>
                                 </div>
                             </template>
@@ -366,10 +378,10 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-[60] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
+            class="fixed inset-0 z-[90] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
             style="display: none;">
 
-            <button @click="showImageModal = false" class="absolute top-5 right-5 sm:top-8 sm:right-8 w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 font-bold transition-all duration-200 flex items-center justify-center backdrop-blur-md z-[70] shadow-lg">
+            <button @click.stop="showImageModal = false" class="absolute top-5 right-5 sm:top-8 sm:right-8 z-[100] w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 font-bold transition-all duration-200 flex items-center justify-center backdrop-blur-md shadow-lg">
                 ✕
             </button>
 
@@ -384,7 +396,7 @@
 
     <!-- Section Tim Developer -->
     <section class="py-20 bg-white text-slate-800 relative overflow-hidden">
-        <!-- Ambient Glow Background (Biru Muda Agak Gelap & Deep Blue) -->
+        <!-- Ambient Glow Background -->
         <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(14,165,233,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,165,233,0.03)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] pointer-events-none"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-tr from-sky-400/20 via-blue-600/15 to-indigo-900/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -407,95 +419,109 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
 
                 <!-- Anggota 1 -->
-                <div class="relative group" data-aos="fade-up">
-                    <!-- Hover Glow Effect (Biru Muda Agak Gelap) -->
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-900 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden text-center group-hover:-translate-y-1.5 transition-all duration-300 shadow-xs group-hover:shadow-xl">
-                        <!-- Compact Photo Container -->
-                        <div class="h-36 sm:h-44 bg-slate-100 relative overflow-hidden group/photo">
-                            <img src="{{ asset('images/team/anggota1.jpg') }}" alt="Dimas Putra Madiadipura"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=Dimas+Putra&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-[10px] font-bold text-white bg-slate-900/80 backdrop-blur-xs px-2.5 py-1 rounded-md border border-white/20"> Architect & Code</span>
+                <div class="relative group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
+                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
+                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                            <img src="{{ asset('images/11 DIMAS PUTRA MADIADIPURA IMG_0645.JPG') }}" alt="Dimas Putra Madiadipura"
+                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                onerror="this.src='https://ui-avatars.com/api/?name=Dimas+Putra+Madiadipura&background=1E3A8A&color=fff&size=256'">
+                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
+                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">Fullstack Developer</span>
                             </div>
                         </div>
-                        <div class="p-3.5">
-                            <h3 class="font-extrabold text-tdkop-navy text-xs sm:text-sm group-hover:text-blue-600 transition-colors truncate">Dimas Putra M.</h3>
-                            <div class="mt-1">
-                                <span class="text-sky-700 text-[10px] font-bold bg-sky-50/80 py-0.5 px-2 rounded-md border border-sky-100 inline-block truncate max-w-full">Leader / Backend</span>
+                        <div class="p-5 text-left">
+                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">Fullstack</span>
+                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors leading-tight">Dimas Putra Madiadipura</h3>
+                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
+                                </p>
                             </div>
-                            <p class="text-slate-400 text-[10px] font-semibold mt-1.5 flex items-center justify-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> XI RPL
-                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Anggota 2 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="100">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-900 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden text-center group-hover:-translate-y-1.5 transition-all duration-300 shadow-xs group-hover:shadow-xl">
-                        <div class="h-36 sm:h-44 bg-slate-100 relative overflow-hidden group/photo">
-                            <img src="{{ asset('images/team/anggota2.jpg') }}" alt="Mohammad Bilal Rabani"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=Bilal+Rabani&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-[10px] font-bold text-white bg-slate-900/80 backdrop-blur-xs px-2.5 py-1 rounded-md border border-white/20">UI/UX Maestro</span>
+                <div class="relative group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
+                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
+                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                            <img src="{{ asset('images/20 MOCHAMAD BILAL RABANI IMG_0654.jpg') }}" alt="Mochamad Bilal Rabani"
+                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                onerror="this.src='https://ui-avatars.com/api/?name=Bilal+Rabani&background=1E3A8A&color=fff&size=256'">
+                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
+                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">UI/UX Maestro</span>
                             </div>
                         </div>
-                        <div class="p-3.5">
-                            <h3 class="font-extrabold text-tdkop-navy text-xs sm:text-sm group-hover:text-blue-600 transition-colors truncate">M. Bilal Rabani</h3>
-                            <div class="mt-1">
-                                <span class="text-sky-700 text-[10px] font-bold bg-sky-50/80 py-0.5 px-2 rounded-md border border-sky-100 inline-block truncate max-w-full">Frontend / UI UX</span>
+                        <div class="p-5 text-left">
+                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">Frontend / UI UX</span>
+                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors truncate">Mochamad Bilal Rabani</h3>
+                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
+                                </p>
                             </div>
-                            <p class="text-slate-400 text-[10px] font-semibold mt-1.5 flex items-center justify-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> XI RPL
-                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Anggota 3 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="200">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-900 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden text-center group-hover:-translate-y-1.5 transition-all duration-300 shadow-xs group-hover:shadow-xl">
-                        <div class="h-36 sm:h-44 bg-slate-100 relative overflow-hidden group/photo">
-                            <img src="{{ asset('images/team/anggota3.jpg') }}" alt="Aulandra Ridwan"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=Aulandra+Ridwan&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-[10px] font-bold text-white bg-slate-900/80 backdrop-blur-xs px-2.5 py-1 rounded-md border border-white/20">Interface Builder</span>
+                <div class="relative group" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
+                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
+                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                            <img src="{{ asset('images/7 AULANDRA RIDWAN IMG_0641.jpg') }}" alt="Aulandra Ridwan"
+                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                onerror="this.src='https://ui-avatars.com/api/?name=Aulandra+Ridwan&background=1E3A8A&color=fff&size=256'">
+                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
+                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">FrontEnd Dev</span>
                             </div>
                         </div>
-                        <div class="p-3.5">
-                            <h3 class="font-extrabold text-tdkop-navy text-xs sm:text-sm group-hover:text-blue-600 transition-colors truncate">Aulandra Ridwan</h3>
-                            <div class="mt-1">
-                                <span class="text-sky-700 text-[10px] font-bold bg-sky-50/80 py-0.5 px-2 rounded-md border border-sky-100 inline-block truncate max-w-full">Frontend Dev</span>
+                        <div class="p-5 text-left">
+                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">FrontEnd Developer</span>
+                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors truncate">Aulandra Ridwan</h3>
+                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
+                                </p>
                             </div>
-                            <p class="text-slate-400 text-[10px] font-semibold mt-1.5 flex items-center justify-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> XI RPL
-                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Anggota 4 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="300">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-900 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden text-center group-hover:-translate-y-1.5 transition-all duration-300 shadow-xs group-hover:shadow-xl">
-                        <div class="h-36 sm:h-44 bg-slate-100 relative overflow-hidden group/photo">
-                            <img src="{{ asset('images/team/anggota4.jpg') }}" alt="Bima Tegar Saputra"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-105" onerror="this.src='https://ui-avatars.com/api/?name=Bima+Tegar&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-[10px] font-bold text-white bg-slate-900/80 backdrop-blur-xs px-2.5 py-1 rounded-md border border-white/20">Data Strategy</span>
+                <div class="relative group" data-aos="fade-up" data-aos-delay="400">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
+                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
+                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                            <img src="{{ asset('images/9 BIMA TEGAR SAPUTRA IMG_0643.jpg') }}" alt="Bima Tegar Saputra"
+                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                onerror="this.src='https://ui-avatars.com/api/?name=Bima+Tegar+Saputra&background=1E3A8A&color=fff&size=256'">
+                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
+                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">Data Strategy</span>
                             </div>
                         </div>
-                        <div class="p-3.5">
-                            <h3 class="font-extrabold text-tdkop-navy text-xs sm:text-sm group-hover:text-blue-600 transition-colors truncate">Bima Tegar S.</h3>
-                            <div class="mt-1">
-                                <span class="text-sky-700 text-[10px] font-bold bg-sky-50/80 py-0.5 px-2 rounded-md border border-sky-100 inline-block truncate max-w-full">Data Analyst</span>
+                        <div class="p-5 text-left">
+                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">Data Analyst</span>
+                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors truncate">Bima Tegar Saputra</h3>
+                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
+                                </p>
                             </div>
-                            <p class="text-slate-400 text-[10px] font-semibold mt-1.5 flex items-center justify-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> XI RPL
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -614,22 +640,32 @@
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hubungi Kami
                     </h4>
                     <ul class="space-y-3.5 text-xs sm:text-sm text-slate-400">
-                        <li class="flex items-start gap-3 group">
-                            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700/50 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                                </svg>
-                            </div>
-                            <span class="leading-relaxed">Jl. Pejaten Raya, RT.6/RW.6, Pejaten Bar., Ps. Minggu, Jakarta Selatan 12510</span>
+                        <li>
+                            <a href="https://maps.app.goo.gl/j4B5Kzm5khtEQ5Yq5"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex items-start gap-3 group">
+                                <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700/50 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                    </svg>
+                                </div>
+                                <span class="leading-relaxed hover:text-white transition-colors">Jl. Pejaten Raya, RT.6/RW.6, Pejaten Bar., Ps. Minggu, Jakarta Selatan 12510</span>
+                            </a>
                         </li>
-                        <li class="flex items-center gap-3 group">
-                            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700/50 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                                </svg>
-                            </div>
-                            <span class="font-medium hover:text-white transition-colors">+62 21-1261-3649</span>
+                        <li>
+                            <a href="https://wa.me/qr/JMGSZHWLQSDZO1"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex items-center gap-3 group">
+                                <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700/50 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium hover:text-white transition-colors">+62 21-1261-3649</span>
+                            </a>
                         </li>
                         <li class="flex items-center gap-3 group">
                             <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700/50 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">

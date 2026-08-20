@@ -23,7 +23,7 @@
 
     <!-- Tombol Action Print -->
     <div class="no-print mb-4 flex gap-3">
-        <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm shadow hover:bg-blue-700 transition">
+        <button onclick="updateReceiptTimeBeforePrint(); window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm shadow hover:bg-blue-700 transition">
             🖨️ Cetak / Simpan PDF
         </button>
         <button onclick="window.close()" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-300 transition">
@@ -47,8 +47,8 @@
                 <span class="font-bold font-mono">{{ $order->order_number }}</span>
             </div>
             <div class="flex justify-between">
-                <span class="text-slate-500">Tanggal:</span>
-                <span>{{ $order->created_at->format('d/m/Y H:i') }} WIB</span>
+                <span class="text-slate-500">Tanggal Cetak:</span>
+                <span id="receipt-time">{{ now()->format('d/m/Y H:i') }} WIB</span>
             </div>
             <div class="flex justify-between">
                 <span class="text-slate-500">Pemesan:</span>
@@ -74,7 +74,7 @@
                 <tr>
                     <td class="py-2">
                         <div class="font-semibold">{{ $detail->product->name }}</div>
-                        <div class="text-[10px] text-slate-400">Ukuran: {{ $detail->size->name }}</div>
+                        <div class="text-[10px] text-slate-400">Ukuran: {{ $detail->size->display_name }}</div>
                     </td>
                     <td class="py-2 text-center font-mono">{{ $detail->quantity }}</td>
                     <td class="py-2 text-right font-medium">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
@@ -101,6 +101,30 @@
             <p class="font-bold mt-1 text-slate-600">-- Terima Kasih --</p>
         </div>
     </div>
+
+    <script>
+        function updateReceiptTimeBeforePrint() {
+            const timeEl = document.getElementById('receipt-time');
+            if (!timeEl) return;
+
+            const now = new Date();
+            const formatted = new Intl.DateTimeFormat('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Jakarta'
+            }).format(now);
+
+            timeEl.textContent = formatted + ' WIB';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateReceiptTimeBeforePrint();
+        });
+    </script>
 
 </body>
 

@@ -33,6 +33,9 @@
 
     <!-- 4. Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- 5. Local application bundle, including Chart.js -->
+    @vite('resources/js/app.js')
 </head>
 
 <body class="bg-slate-50 text-slate-800 antialiased font-sans">

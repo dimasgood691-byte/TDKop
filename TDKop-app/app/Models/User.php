@@ -11,6 +11,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    /**
+     * Mass Assignment Protection
+     * (Kolom 'role' sengaja tidak dimasukkan agar aman dari manipulasi form)
+     */
     protected $fillable = [
         'name',
         'nis',
@@ -18,9 +22,9 @@ class User extends Authenticatable
         'major',
         'username',
         'email',
+        'gender', // <--- Kolom gender ditambahkan di sini
         'password',
-        'role',
-        'points', // Tambahkan kolom ini
+        'points',
     ];
 
     protected $hidden = [
@@ -36,18 +40,19 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * RELASI HASMANY: Seorang User (Siswa) memiliki BANYAK Order (Pesanan)
+     */
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'user_id', 'id');
     }
 
-    public function isAdmin(): bool
+    /**
+     * RELASI HASMANY: Seorang User (Siswa) memiliki BANYAK item di Keranjang (Cart)
+     */
+    public function carts(): HasMany
     {
-        return in_array($this->role, ['admin', 'guru']);
-    }
-
-    public function isSiswa(): bool
-    {
-        return $this->role === 'siswa';
+        return $this->hasMany(Cart::class, 'user_id', 'id');
     }
 }

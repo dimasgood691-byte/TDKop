@@ -9,7 +9,11 @@
                     <a href="{{ route('home') }}" class="bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-900 text-white px-3.5 py-1.5 rounded-xl font-black text-xl tracking-wider shadow-md shadow-blue-500/20 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">TDKop</a>
                     <div>
                         <h1 class="font-extrabold text-tdkop-navy text-sm sm:text-base leading-tight">Dashboard Siswa</h1>
-                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">{{ auth()->user()->name }} <span class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">{{ auth()->user()->class }}</span></p>
+                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">
+                            {{ auth()->user()->name }}
+                            <span class="bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ml-1">{{ auth()->user()->class }}</span>
+                            <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ml-1">{{ auth()->user()->major ?? 'Jurusan belum diisi' }}</span>
+                        </p>
                     </div>
                 </div>
 
@@ -162,6 +166,16 @@
                                     <p class="text-slate-500 text-xs leading-relaxed mt-2 line-clamp-2 min-h-[2.25rem]">
                                         {{ $product->description }}
                                     </p>
+
+                                    <div class="flex flex-wrap gap-1.5 mt-3">
+                                        @forelse($product->stocks as $stock)
+                                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg border {{ $stock->size->gender_label === 'Laki-laki' ? 'bg-sky-50 text-sky-700 border-sky-100' : ($stock->size->gender_label === 'Perempuan' ? 'bg-pink-50 text-pink-700 border-pink-100' : 'bg-slate-50 text-slate-600 border-slate-200') }}">
+                                            {{ $stock->size->display_name }}
+                                        </span>
+                                        @empty
+                                        <span class="text-[10px] text-slate-400">Ukuran belum tersedia</span>
+                                        @endforelse
+                                    </div>
                                 </div>
                             </div>
 
@@ -225,7 +239,7 @@
                                 <div>
                                     <h4 class="font-extrabold text-slate-800 text-base sm:text-lg">{{ $item->product->name }}</h4>
                                     <div class="flex flex-wrap items-center gap-2 mt-1">
-                                        <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-md">Ukuran: {{ $item->size->name ?? '-' }}</span>
+                                        <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-md">Ukuran: {{ optional($item->size)->display_name ?? '-' }}</span>
                                         <span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded-md">{{ $item->quantity }} pcs</span>
                                     </div>
                                     <p class="text-sm font-black text-tdkop-primary mt-2">Rp {{ number_format($sub, 0, ',', '.') }}</p>
@@ -338,7 +352,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </span>
-                                    <span><span class="font-bold text-slate-800">{{ $detail->product->name }}</span> <span class="text-slate-400 text-xs">(Uk: {{ $detail->size->name }})</span> — <span class="font-bold">{{ $detail->quantity }} pcs</span></span>
+                                    <span><span class="font-bold text-slate-800">{{ $detail->product->name }}</span> <span class="text-slate-400 text-xs">(Uk: {{ $detail->size->display_name }})</span> — <span class="font-bold">{{ $detail->quantity }} pcs</span></span>
                                 </div>
                                 @endforeach
                             </div>
@@ -438,7 +452,7 @@
                                             <option value="" disabled selected>-- Silakan Pilih --</option>
                                             <template x-for="item in selectedProduct.stocks" :key="item.id">
                                                 <option :value="item.id" :disabled="item.stock <= 0"
-                                                    x-text="item.size.name + (item.stock > 0 ? ' (Stok: ' + item.stock + ')' : ' - Habis')">
+                                                    x-text="item.size.display_name + (item.stock > 0 ? ' (Stok: ' + item.stock + ')' : ' - Habis')">
                                                 </option>
                                             </template>
                                         </select>
@@ -472,7 +486,7 @@
             <!-- MODAL PREVIEW GAMBAR BESAR -->
             <div x-show="showImageModal" x-transition class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4" style="display: none;">
                 <div @click.away="showImageModal = false" class="relative max-w-3xl w-full">
-                    <button @click="showImageModal = false" class="absolute -top-12 right-0 text-white font-bold text-xl hover:text-slate-300">✕ Tutup</button>
+                    <button @click="showImageModal = false" class="absolute -top-12 right-0 text-white font-bold text-xl hover:text-slate-300">✕</button>
                     <img :src="selectedImage" class="w-full h-auto max-h-[85vh] object-contain rounded-2xl shadow-2xl">
                 </div>
             </div>

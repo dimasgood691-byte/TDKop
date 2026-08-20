@@ -20,12 +20,10 @@ class SiswaController extends Controller
         $user = Auth::user();
         $products = Product::with(['category', 'stocks.size'])->get();
 
-        // Ambil isi keranjang belanja milik siswa yang sedang login
         $cartItems = Cart::with(['product', 'size'])
             ->where('user_id', $user?->id)
             ->get();
 
-        // Ambil riwayat pesanan siswa yang sedang login
         $orders = Order::with(['details.product', 'details.size'])
             ->where('user_id', $user?->id)
             ->latest()
@@ -34,14 +32,11 @@ class SiswaController extends Controller
         return view('siswa.dashboard', compact('products', 'cartItems', 'orders', 'user'));
     }
 
-    /**
-     * FITUR 2: Menambahkan produk ke Keranjang Siswa
-     */
     public function addToCart(Request $request)
     {
         $request->validate([
             'product_stock_id' => 'required|exists:product_stocks,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity'         => 'required|integer|min:1|max:100',
         ]);
 
         $stockItem = ProductStock::findOrFail($request->product_stock_id);
@@ -50,45 +45,40 @@ class SiswaController extends Controller
             return back()->with('error', 'Stok barang tidak mencukupi untuk jumlah yang diminta.');
         }
 
-        // Cek jika produk & ukuran yang sama sudah ada di keranjang siswa
         $existingCart = Cart::where('user_id', Auth::id())
             ->where('product_id', $stockItem->product_id)
             ->where('size_id', $stockItem->size_id)
             ->first();
 
         if ($existingCart) {
-            // Jika sudah ada, tambahkan quantity-nya saja
             $existingCart->increment('quantity', $request->quantity);
         } else {
-            // Jika belum ada, buat item keranjang baru
             Cart::create([
-                'user_id' => Auth::id(),
+                'user_id'    => Auth::id(),
                 'product_id' => $stockItem->product_id,
-                'size_id' => $stockItem->size_id,
-                'quantity' => $request->quantity,
+                'size_id'    => $stockItem->size_id,
+                'quantity'   => $request->quantity,
             ]);
         }
 
         return back()->with('success', 'Barang berhasil dimasukkan ke keranjang!');
     }
 
-    /**
-     * Hapus item tertentu dari Keranjang Belanja
-     */
     public function removeFromCart($id)
     {
+        // Dipastikan hanya bisa menghapus item keranjang milik sendiri
         Cart::where('user_id', Auth::id())->where('id', $id)->delete();
         return back()->with('success', 'Barang berhasil dihapus dari keranjang.');
     }
 
-    /**
-     * FITUR 1 & 2: Process Checkout dari Keranjang & Tambah Point (+1 per qty)
-     */
     public function checkout(Request $request)
     {
         $user = Auth::user();
 
-        // Ambil barang-barang di keranjang siswa
+        $request->validate([
+            'notes' => 'nullable|string|max:500',
+        ]);
+
         $cartItems = Cart::with(['product', 'size'])
             ->where('user_id', $user->id)
             ->get();
@@ -99,14 +89,14 @@ class SiswaController extends Controller
 
         DB::transaction(function () use ($user, $cartItems, $request) {
             $totalPrice = 0;
-            $totalItemsCount = 0; // Menghitung total jumlah barang untuk POIN
+            $totalItemsCount = 0;
 
             foreach ($cartItems as $item) {
+                // Harga selalu diambil dari database backend, bukan input form
                 $subtotal = $item->product->price * $item->quantity;
                 $totalPrice += $subtotal;
-                $totalItemsCount += $item->quantity; // 1 qty barang = +1 poin
+                $totalItemsCount += $item->quantity;
 
-                // Kurangi stok produk sesuai varian ukuran
                 $stockItem = ProductStock::where('product_id', $item->product_id)
                     ->where('size_id', $item->size_id)
                     ->first();
@@ -116,44 +106,40 @@ class SiswaController extends Controller
                 }
             }
 
-            // 1. Buat Header Order Utama
             $order = Order::create([
-                'user_id' => $user->id,
+                'user_id'      => $user->id,
                 'order_number' => 'TRX-' . date('Ymd') . '-' . strtoupper(Str::random(4)),
-                'order_date' => now(),
-                'total_price' => $totalPrice,
-                'status' => 'pending',
-                'notes' => $request->notes,
+                'order_date'   => now(),
+                'total_price'  => $totalPrice,
+                'status'       => 'pending',
+                'notes'        => $request->notes,
             ]);
 
-            // 2. Simpan Rincian Produk (Order Details)
             foreach ($cartItems as $item) {
                 OrderDetail::create([
-                    'order_id' => $order->id,
+                    'order_id'   => $order->id,
                     'product_id' => $item->product_id,
-                    'size_id' => $item->size_id,
-                    'quantity' => $item->quantity,
-                    'price' => $item->product->price,
-                    'subtotal' => $item->product->price * $item->quantity,
+                    'size_id'    => $item->size_id,
+                    'quantity'   => $item->quantity,
+                    'price'      => $item->product->price,
+                    'subtotal'   => $item->product->price * $item->quantity,
                 ]);
             }
 
-            // 3. FITUR 1: TAMBAH POIN SISWA (+1 poin untuk setiap 1 barang/qty yang dibeli)
             User::where('id', $user->id)->increment('points', $totalItemsCount);
-
-            // 4. Kosongkan keranjang belanja siswa setelah checkout
             Cart::where('user_id', $user->id)->delete();
         });
 
-        return back()->with('success', 'Pesanan berhasil dibuat! Poin kamu otomatis bertambah 🎉');
+        return back()->with('success', 'Pesanan berhasil dibuat! Harap ditunggu ya, pesanan kamu akan segera diproses.')->with('print_receipt', true);
     }
 
     public function printReceipt($id)
     {
         $order = Order::with(['user', 'details.product', 'details.size'])->findOrFail($id);
 
-        if (Auth::check() && Auth::user()->role === 'siswa' && $order->user_id !== Auth::id()) {
-            abort(403);
+        // PROTEKSI IDOR: Siswa tidak bisa mengintip nota milik siswa lain!
+        if (!in_array(Auth::user()->role, ['admin', 'guru']) && $order->user_id !== Auth::id()) {
+            abort(403, 'Akses Ditolak! Kamu tidak berhak melihat struk belanja ini.');
         }
 
         return view('order.receipt', compact('order'));

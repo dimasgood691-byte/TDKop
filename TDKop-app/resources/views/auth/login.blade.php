@@ -1,5 +1,5 @@
-<x-layouts.app title="Login TDKop">
-    <div class="min-h-screen flex" x-data="{ role: 'siswa', showPassword: false }">
+<x-layouts.app title="Masuk TDKop">
+    <div class="min-h-screen flex bg-slate-50/50" x-data="{ role: 'siswa', showPassword: false }">
 
         <!-- ==================== PANEL KIRI (Branding) ==================== -->
         <div class="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-gradient-to-br from-tdkop-primary to-tdkop-navy flex-col justify-between p-10 xl:p-14">
@@ -10,12 +10,10 @@
             <div class="pointer-events-none absolute -bottom-32 -left-16 w-72 h-72 bg-white/5 rounded-full"></div>
 
             <!-- Logo & Nama Sekolah -->
-            <!-- Logo & Nama Sekolah -->
             <a href="{{ url('/') }}" class="relative z-10 flex items-center gap-3 w-fit group">
                 <div class="bg-white/15 border border-white/20 backdrop-blur-sm p-2 rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white/25">
-                    <!-- Mengganti div huruf TDK dengan gambar logo -->
                     <img
-                        src="{{ asset('images/logo-smkn-8-jkt.png') }}"
+                        src="{{ asset('images/SMK_Negeri_8_Jakarta.png') }}"
                         alt="Logo SMKN 8 Jakarta"
                         class="w-9 h-9 object-contain">
                 </div>
@@ -83,12 +81,14 @@
             </p>
         </div>
 
-        <!-- ==================== PANEL KANAN (Form Login) ==================== -->
-        <div class="w-full lg:w-[55%] flex items-center justify-center bg-white p-6 sm:p-10">
-            <div class="w-full max-w-sm" data-aos="fade-up">
+        <!-- ==================== PANEL KANAN (Card Form Login) ==================== -->
+        <div class="w-full lg:w-[55%] flex items-center justify-center p-4 sm:p-8 md:p-12 my-auto">
+
+            <!-- CARD CONTAINER LOGIN -->
+            <div class="w-full max-w-md bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/50" data-aos="fade-up">
 
                 <!-- Logo mobile (tampil hanya di layar kecil) -->
-                <a href="{{ url('/') }}" class="flex lg:hidden items-center gap-3 mb-8 w-fit group">
+                <a href="{{ url('/') }}" class="flex lg:hidden items-center gap-3 mb-6 w-fit group">
                     <div class="bg-tdkop-primary text-white font-bold text-lg w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-tdkop-navy">
                         TDK
                     </div>
@@ -110,7 +110,7 @@
                 @endif
 
                 <!-- Tab Pilihan Peran -->
-                <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl mb-6">
+                <div class="grid grid-cols-2 gap-1 bg-slate-100/80 p-1 rounded-xl mb-6 border border-slate-200/60">
                     <button type="button" @click="role = 'siswa'"
                         :class="role === 'siswa' ? 'bg-white text-tdkop-navy shadow-sm' : 'text-slate-500 hover:text-slate-700'"
                         class="flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-all duration-300">
@@ -140,7 +140,7 @@
                     <!-- Username / NIS -->
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">
-                            <span x-text="role === 'siswa' ? 'Username / NIS' : 'Username / NIP'"></span>
+                            <span x-text="role === 'siswa' ? 'Username' : 'Username'"></span>
                             <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
@@ -156,7 +156,7 @@
                                 class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm outline-none
                                        transition-all duration-300 ease-out
                                        hover:border-tdkop-primary hover:shadow-sm
-                                       focus:ring-2 focus:ring-tdkop-primary/40 focus:border-tdkop-primary focus:scale-[1.02] focus:shadow-md">
+                                       focus:ring-2 focus:ring-tdkop-primary/40 focus:border-tdkop-primary focus:scale-[1.01]">
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@
                                 class="w-full pl-10 pr-11 py-2.5 border border-slate-300 rounded-xl text-sm outline-none
                                        transition-all duration-300 ease-out
                                        hover:border-tdkop-primary hover:shadow-sm
-                                       focus:ring-2 focus:ring-tdkop-primary/40 focus:border-tdkop-primary focus:scale-[1.02] focus:shadow-md">
+                                       focus:ring-2 focus:ring-tdkop-primary/40 focus:border-tdkop-primary focus:scale-[1.01]">
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-tdkop-primary transition-all duration-300 hover:scale-125">
                                 <svg x-show="!showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,10 +194,6 @@
 
                     <!-- Ingat saya & Lupa kata sandi -->
                     <div class="flex items-center justify-between text-sm pt-1">
-                        <label class="flex items-center gap-2 text-slate-600 cursor-pointer select-none">
-                            <input type="checkbox" name="remember" class="rounded border-slate-300 text-tdkop-primary focus:ring-tdkop-primary/40 transition-all duration-300">
-                            Ingat saya
-                        </label>
                         <a href="{{ route('password.request') }}" class="text-tdkop-primary font-medium hover:text-tdkop-navy transition-all duration-300 hover:underline">
                             Lupa kata sandi?
                         </a>
@@ -206,7 +202,7 @@
                     <!-- Submit -->
                     <button type="submit"
                         class="w-full flex items-center justify-center gap-2 bg-tdkop-primary text-white py-3 rounded-xl font-semibold
-                               transition-all duration-300 hover:scale-[1.02] active:scale-95 hover:-translate-y-0.5
+                               transition-all duration-300 hover:scale-[1.01] active:scale-95 hover:-translate-y-0.5
                                hover:bg-tdkop-navy shadow-md hover:shadow-xl hover:shadow-blue-900/25">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
@@ -224,9 +220,10 @@
                     </a>
                 </p>
                 <p class="text-center text-xs text-slate-400 mt-2">
-                    Butuh akun Admin/Staff? Hubungi administrator koperasi.
+                    Butuh akun Admin/Guru? Hubungi administrator koperasi.
                 </p>
             </div>
+
         </div>
     </div>
 </x-layouts.app>

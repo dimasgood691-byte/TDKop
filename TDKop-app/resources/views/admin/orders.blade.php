@@ -18,7 +18,7 @@
                     </div>
                     <div class="text-xs text-slate-600 mt-2">
                         @foreach($order->details as $detail)
-                        <div>- {{ $detail->product->name }} ({{ $detail->size->name }}) x {{ $detail->quantity }}</div>
+                        <div>- {{ $detail->product->name }} ({{ $detail->size->display_name }}) x {{ $detail->quantity }}</div>
                         @endforeach
                     </div>
                 </div>

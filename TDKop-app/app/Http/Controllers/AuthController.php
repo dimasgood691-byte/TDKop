@@ -16,37 +16,33 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // 1. Validasi input termasuk field 'role' dari form
+        // Validasi input login secara ketat
         $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-            'role'     => ['required', 'string'],
+            'username' => ['required', 'string', 'max:50'],
+            'password' => ['required', 'string'],
+            'role'     => ['required', 'string', 'in:admin,siswa'],
         ]);
 
         $username = $request->input('username');
         $password = $request->input('password');
         $selectedRole = $request->input('role');
-        $remember = $request->has('remember');
+        $remember = $request->boolean('remember');
 
-        // 2. Jika user memilih tab Admin/Staff, izinkan login untuk role 'admin' ATAU 'guru'
         if ($selectedRole === 'admin') {
             $authenticated = Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'admin'], $remember)
                 || Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'guru'], $remember);
 
             if ($authenticated) {
-                $request->session()->regenerate();
-                return redirect()->intended('dashboard/admin');
+                $request->session()->regenerate(); // Regenerasi session ID demi keamanan
+                return redirect()->intended(route('admin.dashboard'));
             }
-        }
-        // 3. Jika user memilih tab Siswa, pastikan role di DB adalah 'siswa'
-        else {
+        } else {
             if (Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'siswa'], $remember)) {
-                $request->session()->regenerate();
-                return redirect()->intended('dashboard/siswa');
+                $request->session()->regenerate(); // Regenerasi session ID demi keamanan
+                return redirect()->intended(route('siswa.dashboard'));
             }
         }
 
-        // 4. Jika username/password salah ATAU role tidak cocok
         return back()->withErrors([
             'username' => 'Username, kata sandi, atau peran (role) yang dipilih tidak cocok.'
         ])->onlyInput('username');
@@ -60,25 +56,31 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'nis' => 'required|unique:users',
-            'class' => 'required',
-            'major' => 'required',
-            'username' => 'required|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
+            'name'     => 'required|string|max:255',
+            'nis'      => 'required|string|max:50|unique:users,nis',
+            'class'    => 'required|string|max:50',
+            'major'    => 'required|string|max:100',
+            'gender'   => 'required|in:L,P', // <-- Validasi Jenis Kelamin (L/P)
+            'username' => 'required|string|max:50|unique:users,username',
+            'email'    => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
+        // Buat user tanpa mengizinkan penyerang mengatur 'role' dari request
         $user = User::create([
-            'name' => $data['name'],
-            'nis' => $data['nis'],
-            'class' => $data['class'],
-            'major' => $data['major'],
+            'name'     => $data['name'],
+            'nis'      => $data['nis'],
+            'class'    => $data['class'],
+            'major'    => $data['major'],
+            'gender'   => $data['gender'], // <-- Menyimpan input Gender ke database
             'username' => $data['username'],
-            'email' => $data['email'],
+            'email'    => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'siswa',
         ]);
+
+        // Set role siswa secara eksplisit di server
+        $user->role = 'siswa';
+        $user->save();
 
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat. Silakan login.');
     }
