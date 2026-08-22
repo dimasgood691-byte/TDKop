@@ -12,7 +12,7 @@
                         <p class="text-[11px] sm:text-xs text-slate-500 font-medium">
                             {{ auth()->user()->name }}
                             <span class="bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ml-1">{{ auth()->user()->class }}</span>
-                            <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ml-1">{{ auth()->user()->major ?? 'Jurusan belum diisi' }}</span>
+                            <span class="bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ml-1">{{ auth()->user()->major ?? 'Jurusan belum diisi' }}</span>
                         </p>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
 
                 <div class="relative z-10">
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Halo, {{ auth()->user()->name }}! 👋</h2>
-                    <p class="text-blue-100 text-sm sm:text-base max-w-xl">Penuhi perlengkapan dan jajanan sekolahmu dengan mudah. Belanja sekarang, kumpulkan poinnya, dan tukarkan dengan hadiah menarik!</p>
+                    <p class="text-blue-100 text-sm sm:text-base max-w-xl">Penuhi Seragam dan perlengkapan sekolahmu dengan mudah di TDKop. Belanja sekarang, kumpulkan poinnya, dan tukarkan dengan hadiah menarik <span class="font-bold text-red-700">!!!</span></p>
                 </div>
             </div>
 

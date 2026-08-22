@@ -29,7 +29,7 @@
                     Gabung & Mulai <br /> Belanja Lebih Mudah
                 </h1>
                 <p class="text-blue-100 text-sm leading-relaxed mb-8 max-w-sm">
-                    Buat akun siswa untuk memesan seragam, buku, dan peralatan sekolah langsung dari genggamanmu, tanpa perlu antre di koperasi.
+                    Buat akun siswa untuk memesan seragam dan peralatan sekolah langsung dari genggamanmu, tanpa perlu antri di koperasi.
                 </p>
 
                 <div class="space-y-4">
@@ -55,7 +55,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-white font-semibold text-sm">Belanja Tanpa Antre</h3>
+                            <h3 class="text-white font-semibold text-sm">Belanja Tanpa Antri</h3>
                             <p class="text-blue-100 text-xs mt-0.5">Pesan dari rumah, ambil barang langsung di koperasi</p>
                         </div>
                     </div>
@@ -89,8 +89,11 @@
 
                 <!-- Logo mobile (tampil hanya di layar kecil) -->
                 <a href="{{ url('/') }}" class="flex lg:hidden items-center gap-3 mb-6 w-fit group">
-                    <div class="bg-tdkop-primary text-white font-bold text-lg w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-tdkop-navy">
-                        TDK
+                    <div class="bg-white/15 border border-white/20 backdrop-blur-sm p-2 rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white/25">
+                        <img
+                            src="{{ asset('images/SMK_Negeri_8_Jakarta.png') }}"
+                            alt="Logo SMKN 8 Jakarta"
+                            class="w-9 h-9 object-contain">
                     </div>
                     <div>
                         <h2 class="text-tdkop-navy font-bold text-sm leading-tight transition-colors duration-300 group-hover:text-tdkop-primary">SMK Negeri 8 Jakarta</h2>

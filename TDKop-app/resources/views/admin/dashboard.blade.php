@@ -1,4 +1,4 @@
-<x-layouts.app title="Dashboard Admin - TDKop">
+<x-layouts.app title="Dashboard Pembina Koperasi - TDKop">
     <!-- Navbar Admin -->
     <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 shadow-xs transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -8,7 +8,7 @@
                     TDKop
                 </a>
                 <div>
-                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base leading-tight">Dashboard Pengurus Koperasi</h1>
+                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base leading-tight">Dashboard Pembina Koperasi</h1>
                     <p class="text-[11px] sm:text-xs text-slate-500 font-medium">
                         {{ auth()->user()->name }}
                         <span class="bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-md text-[10px] uppercase tracking-wider ml-1">
@@ -60,7 +60,7 @@
                     Halo, {{ auth()->user()->name }}! 👋
                 </h1>
                 <p class="text-slate-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
-                    Kelola pesanan siswa, pantau stok barang, dan perbarui katalog produk Koperasi SMK 8 dengan cepat dan praktis dari panel ini.
+                    Kelola pesanan siswa, pantau grafik penjualan, pantau stok barang, dan perbarui katalog produk Koperasi SMK 8 dengan cepat dan praktis dari website ini.
                 </p>
             </div>
         </div>
@@ -137,52 +137,58 @@
 
         <!-- TAB 0: GRAFIK PENJUALAN -->
         <section x-show="activeTab === 'sales'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0" style="display: none;">
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6">
+            <!-- HEADER & FILTER -->
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8">
                 <div>
-                    <p class="text-xs font-black uppercase tracking-[0.18em] text-sky-600 mb-1">Insight Koperasi</p>
-                    <h2 class="text-2xl font-black text-slate-900">Grafik Penjualan</h2>
-                    <p class="text-sm text-slate-500 mt-1">Penjualan resmi berdasarkan pesanan yang sudah selesai.</p>
+                    <div class="inline-flex items-center gap-2 bg-sky-50 border border-sky-200/80 px-3 py-1 rounded-full mb-2">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+                        <h2 class="text-[11px] font-black uppercase tracking-[0.18em] text-sky-700">Grafik Penjualan Koperasi</h2>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium">Penjualan resmi berdasarkan pesanan yang sudah selesai dikonfirmasi.</p>
                 </div>
-                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
-                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">
                         Dari
-                        <input type="date" name="date_from" value="{{ $dateFrom->toDateString() }}" class="block mt-1 px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/30 outline-none">
+                        <input type="date" name="date_from" value="{{ $dateFrom->toDateString() }}" class="block mt-1 px-3 py-2 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-800 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 outline-none transition cursor-pointer">
                     </label>
-                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">
                         Sampai
-                        <input type="date" name="date_to" value="{{ $dateTo->toDateString() }}" class="block mt-1 px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-sky-500/30 outline-none">
+                        <input type="date" name="date_to" value="{{ $dateTo->toDateString() }}" class="block mt-1 px-3 py-2 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-800 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 outline-none transition cursor-pointer">
                     </label>
-                    <button type="submit" class="px-4 py-2.5 rounded-xl bg-indigo-900 text-white text-xs font-black hover:bg-indigo-950 transition">Terapkan</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-900 hover:bg-slate-900 text-white text-xs font-extrabold shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer shrink-0">Terapkan</button>
                 </form>
             </div>
 
-            <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-2xl border border-emerald-100 p-5 shadow-sm">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Pendapatan</span>
-                    <p class="text-xl sm:text-2xl font-black text-emerald-600 mt-2">Rp {{ number_format($salesSummary['revenue'], 0, ',', '.') }}</p>
+            <!-- SUMMARY CARDS -->
+            <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-8">
+                <div class="bg-white rounded-2xl border border-emerald-100/80 p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-emerald-600/80 group-hover:text-emerald-700">Pendapatan</span>
+                    <p class="text-xl sm:text-2xl font-black text-emerald-600 mt-2 tracking-tight">Rp {{ number_format($salesSummary['revenue'], 0, ',', '.') }}</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-sky-100 p-5 shadow-sm">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Produk Terjual</span>
-                    <p class="text-xl sm:text-2xl font-black text-sky-600 mt-2">{{ number_format($salesSummary['units']) }} pcs</p>
+                <div class="bg-white rounded-2xl border border-sky-100/80 p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-sky-600/80 group-hover:text-sky-700">Produk Terjual</span>
+                    <p class="text-xl sm:text-2xl font-black text-sky-600 mt-2 tracking-tight">{{ number_format($salesSummary['units']) }} pcs</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-indigo-100 p-5 shadow-sm">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Pesanan Selesai</span>
-                    <p class="text-xl sm:text-2xl font-black text-indigo-600 mt-2">{{ number_format($salesSummary['orders']) }}</p>
+                <div class="bg-white rounded-2xl border border-indigo-100/80 p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600/80 group-hover:text-indigo-700">Pesanan Selesai</span>
+                    <p class="text-xl sm:text-2xl font-black text-indigo-600 mt-2 tracking-tight">{{ number_format($salesSummary['orders']) }}</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-amber-100 p-5 shadow-sm">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Rata-rata Pesanan</span>
-                    <p class="text-xl sm:text-2xl font-black text-amber-600 mt-2">Rp {{ number_format($salesSummary['average_order'], 0, ',', '.') }}</p>
+                <div class="bg-white rounded-2xl border border-amber-100/80 p-5 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all group">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-amber-600/80 group-hover:text-amber-700">Rata-rata Pesanan</span>
+                    <p class="text-xl sm:text-2xl font-black text-amber-600 mt-2 tracking-tight">Rp {{ number_format($salesSummary['average_order'], 0, ',', '.') }}</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-                <div class="xl:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-6">
-                    <div class="flex items-center justify-between mb-5">
+            <!-- CHARTS SECTION -->
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+                <!-- LINE CHART -->
+                <div class="xl:col-span-2 bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h3 class="font-black text-slate-900">Grafik Penjualan</h3>
-                            <p class="text-xs text-slate-400 mt-1">Pendapatan dan unit per hari</p>
+                            <h3 class="font-extrabold text-slate-900 text-base">Grafik Penjualan</h3>
+                            <p class="text-xs text-slate-400 font-medium mt-0.5">Pendapatan dan unit terakumulasi per hari</p>
                         </div>
-                        <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">SELESAI</span>
+                        <span class="text-[10px] font-black text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-3 py-1 rounded-full uppercase tracking-wider">SELESAI</span>
                     </div>
                     @php
                     $chartDays = $dailySales->values();
@@ -190,56 +196,62 @@
                     $chartMaxUnits = max(1, $chartDays->max('units'));
                     $chartLastIndex = max(1, $chartDays->count() - 1);
                     @endphp
-                    <div class="h-72 overflow-hidden">
+                    <div class="h-72 overflow-hidden w-full">
                         <svg viewBox="0 0 800 280" class="w-full h-full" role="img" aria-label="Grafik garis penjualan harian">
-                            <line x1="48" y1="28" x2="48" y2="238" stroke="#cbd5e1" stroke-width="1" />
-                            <line x1="48" y1="238" x2="780" y2="238" stroke="#cbd5e1" stroke-width="1" />
-                            <line x1="48" y1="78" x2="780" y2="78" stroke="#e2e8f0" stroke-dasharray="4 5" />
-                            <line x1="48" y1="128" x2="780" y2="128" stroke="#e2e8f0" stroke-dasharray="4 5" />
-                            <line x1="48" y1="188" x2="780" y2="188" stroke="#e2e8f0" stroke-dasharray="4 5" />
-                            <text x="8" y="34" fill="#64748b" font-size="11">Rp {{ number_format($chartMaxRevenue, 0, ',', '.') }}</text>
-                            <text x="18" y="242" fill="#64748b" font-size="11">Rp 0</text>
+                            <!-- Subtle Grid Lines -->
+                            <line x1="48" y1="28" x2="48" y2="238" stroke="#e2e8f0" stroke-width="1.5" />
+                            <line x1="48" y1="238" x2="780" y2="238" stroke="#e2e8f0" stroke-width="1.5" />
+                            <line x1="48" y1="78" x2="780" y2="78" stroke="#f1f5f9" stroke-dasharray="4 4" />
+                            <line x1="48" y1="128" x2="780" y2="128" stroke="#f1f5f9" stroke-dasharray="4 4" />
+                            <line x1="48" y1="188" x2="780" y2="188" stroke="#f1f5f9" stroke-dasharray="4 4" />
+                            <text x="8" y="34" fill="#94a3b8" font-size="11" font-weight="700">Rp {{ number_format($chartMaxRevenue, 0, ',', '.') }}</text>
+                            <text x="18" y="242" fill="#94a3b8" font-size="11" font-weight="700">Rp 0</text>
 
+                            <!-- Chart Line -->
                             <polyline
                                 fill="none"
                                 stroke="#10b981"
-                                stroke-width="4"
+                                stroke-width="3.5"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 points="@foreach($chartDays as $index => $day){{ 48 + ($index / $chartLastIndex * 732) }},{{ 238 - ($day['revenue'] / $chartMaxRevenue * 190) }} @endforeach" />
 
                             @foreach($chartDays as $index => $day)
                             @if($day['revenue'] > 0)
-                            <circle cx="{{ 48 + ($index / $chartLastIndex * 732) }}" cy="{{ 238 - ($day['revenue'] / $chartMaxRevenue * 190) }}" r="5" fill="#ffffff" stroke="#10b981" stroke-width="3">
+                            <circle cx="{{ 48 + ($index / $chartLastIndex * 732) }}" cy="{{ 238 - ($day['revenue'] / $chartMaxRevenue * 190) }}" r="5" fill="#ffffff" stroke="#10b981" stroke-width="3.5" class="transition-transform hover:scale-125">
                                 <title>{{ $day['label'] }}: Rp {{ number_format($day['revenue'], 0, ',', '.') }}</title>
                             </circle>
                             @endif
                             @if($index === 0 || $index === (int) floor($chartDays->count() / 2) || $index === $chartDays->count() - 1)
-                            <text x="{{ 48 + ($index / $chartLastIndex * 732) }}" y="264" text-anchor="middle" fill="#64748b" font-size="11">{{ $day['label'] }}</text>
+                            <text x="{{ 48 + ($index / $chartLastIndex * 732) }}" y="264" text-anchor="middle" fill="#64748b" font-size="11" font-weight="600">{{ $day['label'] }}</text>
                             @endif
                             @endforeach
                         </svg>
                     </div>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-6">
-                    <h3 class="font-black text-slate-900">Penjualan Berdasarkan Gender</h3>
-                    <p class="text-xs text-slate-400 mt-1 mb-4">Jumlah unit dari ukuran baju</p>
+
+                <!-- DONUT CHART -->
+                <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-extrabold text-slate-900 text-base">Penjualan Berdasarkan Gender</h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5 mb-4">Jumlah unit dari kategori pakaian/seragam</p>
+                    </div>
                     @php
                     $genderTotal = $genderSales->sum();
                     $genderCircle = 389;
                     $genderOffset = 0;
                     $genderColors = ['Laki-laki' => '#0284c7', 'Perempuan' => '#ec4899', 'Umum' => '#94a3b8'];
                     @endphp
-                    <div class="relative h-56 flex items-center justify-center">
-                        <svg viewBox="0 0 180 180" class="w-48 h-48 -rotate-90" role="img" aria-label="Diagram penjualan berdasarkan gender">
-                            <circle cx="90" cy="90" r="62" fill="none" stroke="#e2e8f0" stroke-width="18" />
+                    <div class="relative h-56 flex items-center justify-center my-2">
+                        <svg viewBox="0 0 180 180" class="w-48 h-48 -rotate-90 drop-shadow-xs" role="img" aria-label="Diagram penjualan berdasarkan gender">
+                            <circle cx="90" cy="90" r="62" fill="none" stroke="#f1f5f9" stroke-width="18" />
                             @if($genderTotal > 0)
                             @foreach($genderSales as $gender => $units)
                             @php
                             $genderDash = $genderCircle * ($units / $genderTotal);
                             $genderColor = $genderColors[$gender] ?? '#64748b';
                             @endphp
-                            <circle cx="90" cy="90" r="62" fill="none" stroke="{{ $genderColor }}" stroke-width="18" stroke-linecap="butt" stroke-dasharray="{{ $genderDash }} {{ $genderCircle - $genderDash }}" stroke-dashoffset="-{{ $genderOffset }}">
+                            <circle cx="90" cy="90" r="62" fill="none" stroke="{{ $genderColor }}" stroke-width="18" stroke-linecap="butt" stroke-dasharray="{{ $genderDash }} {{ $genderCircle - $genderDash }}" stroke-dashoffset="-{{ $genderOffset }}" class="transition-all hover:opacity-90">
                                 <title>{{ $gender }}: {{ number_format($units) }} pcs</title>
                             </circle>
                             @php $genderOffset += $genderDash; @endphp
@@ -247,42 +259,53 @@
                             @endif
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span class="text-3xl font-black text-slate-900">{{ number_format($genderTotal) }}</span>
+                            <span class="text-3xl font-black text-slate-900 tracking-tight">{{ number_format($genderTotal) }}</span>
                             <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Pcs</span>
                         </div>
                     </div>
                     <div class="mt-3 grid grid-cols-1 gap-2">
                         @forelse($genderSales as $gender => $units)
                         @php $genderColor = $genderColors[$gender] ?? '#64748b'; @endphp
-                        <div class="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-xs border border-slate-100">
-                            <span class="flex items-center gap-2 font-bold text-slate-600">
-                                <span class="h-2.5 w-2.5 rounded-full {{ $gender === 'Laki-laki' ? 'bg-sky-600' : ($gender === 'Perempuan' ? 'bg-pink-500' : 'bg-slate-400') }}"></span>
+                        <div class="flex items-center justify-between rounded-2xl bg-slate-50/80 px-3.5 py-2.5 text-xs border border-slate-100 hover:border-slate-200 transition-colors">
+                            <span class="flex items-center gap-2 font-extrabold text-slate-700">
+                                <span class="h-2.5 w-2.5 rounded-full {{ $gender === 'Laki-laki' ? 'bg-sky-500 shadow-xs shadow-sky-500/50' : ($gender === 'Perempuan' ? 'bg-pink-500 shadow-xs shadow-pink-500/50' : 'bg-slate-400') }}"></span>
                                 {{ $gender }}
                             </span>
-                            <span class="font-black text-slate-900">{{ number_format($units) }} pcs</span>
+                            <span class="font-black text-slate-900">{{ number_format($units) }} <span class="text-[10px] text-slate-400 font-bold">pcs</span></span>
                         </div>
                         @empty
-                        <div class="rounded-xl bg-slate-50 px-3 py-3 text-center text-xs text-slate-400">Belum ada penjualan selesai.</div>
+                        <div class="rounded-2xl bg-slate-50/80 px-3 py-3 text-center text-xs text-slate-400 font-medium">Belum ada penjualan selesai.</div>
                         @endforelse
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 sm:p-6 border-b border-slate-100">
-                    <h3 class="font-black text-slate-900">Produk Terlaris</h3>
-                    <p class="text-xs text-slate-400 mt-1">Diurutkan berdasarkan jumlah unit terjual</p>
+            <!-- TOP PRODUCTS TABLE -->
+            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100">
+                    <h3 class="font-extrabold text-slate-900 text-base">Produk Terlaris</h3>
+                    <p class="text-xs text-slate-400 font-medium mt-0.5">Diurutkan berdasarkan jumlah akumulasi unit terjual</p>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500">
-                            <tr><th class="px-5 py-3">Produk</th><th class="px-5 py-3">Unit</th><th class="px-5 py-3">Pendapatan</th></tr>
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                        <thead class="bg-slate-50/80 text-[10px] uppercase tracking-wider text-slate-500 font-black border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-3.5">Produk</th>
+                                <th class="px-6 py-3.5">Unit</th>
+                                <th class="px-6 py-3.5">Pendapatan</th>
+                            </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse($topProducts as $product)
-                            <tr><td class="px-5 py-3 font-bold text-slate-800">{{ $product['name'] }}</td><td class="px-5 py-3 font-black text-sky-600">{{ number_format($product['units']) }} pcs</td><td class="px-5 py-3 font-black text-emerald-600">Rp {{ number_format($product['revenue'], 0, ',', '.') }}</td></tr>
+                            <tr class="hover:bg-slate-50/60 transition-colors">
+                                <td class="px-6 py-4 font-extrabold text-slate-800">{{ $product['name'] }}</td>
+                                <td class="px-6 py-4 font-black text-sky-600">{{ number_format($product['units']) }} <span class="text-[10px] text-sky-500/70 font-extrabold">pcs</span></td>
+                                <td class="px-6 py-4 font-black text-emerald-600">Rp {{ number_format($product['revenue'], 0, ',', '.') }}</td>
+                            </tr>
                             @empty
-                            <tr><td colspan="3" class="px-5 py-8 text-center text-slate-400">Belum ada penjualan selesai pada periode ini.</td></tr>
+                            <tr>
+                                <td colspan="3" class="px-6 py-10 text-center text-slate-400 font-medium">Belum ada penjualan selesai pada periode ini.</td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>

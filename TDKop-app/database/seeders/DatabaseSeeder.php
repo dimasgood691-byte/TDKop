@@ -18,21 +18,11 @@ class DatabaseSeeder extends Seeder
         // 1. Seed Users (Siswa & Admin/Guru)
         $admin = User::create([
             'name'     => 'Guru Pembina Koperasi',
-            'username' => 'pak hasan',
-            'email'    => 'admin@smk8.sch.id',
-            'password' => Hash::make('hasan123'),
+            'username' => 'guru pembina koperasi',
+            'email'    => 'smkn8jakarta.sch.id',
+            'password' => Hash::make('tradeviskoperasi1965'),
             'role'     => 'admin',
         ]);
-
-        User::updateOrCreate(
-            ['username' => 'mr kinz'], // Mencari apakah username ini sudah ada
-            [
-                'name' => 'Guru Pembina Koperasi',
-                'email' => 'adminbaru@smk8.sch.id',
-                'password' => Hash::make('mrkinz123'),
-                'role' => 'admin',
-            ]
-        );
 
         // 2. Seed Categories
         $catSeragam   = Category::create(['name' => 'Seragam Sekolah', 'slug' => 'seragam-sekolah']);
@@ -58,10 +48,10 @@ class DatabaseSeeder extends Seeder
         // 4. Seed Products & Stock Examples
         $p1 = Product::create([
             'category_id' => $catSeragam->id,
-            'name'        => 'Seragam Batik SMK 8 Official',
-            'slug'        => Str::slug('Seragam Batik SMK 8 Official'),
+            'name'        => 'Seragam Batik SMK 8',
+            'slug'        => Str::slug('Seragam Batik SMK 8'),
             'description' => 'Batik resmi identitas siswa SMK 8, bahan katun prima adem dan nyaman digunakan seharian.',
-            'price'       => 130000,
+            'price'       => 150000,
             'is_active'   => true,
         ]);
 

@@ -1,4 +1,4 @@
-<x-layouts.app title="TDKop - Koperasi Digital SMK Negeri 8 Jakarta">
+<x-layouts.app title="TDKop - Tradevis Koperasi">
     <!-- Navbar (Clean Glassmorphism) -->
     <!-- Navbar Modern Glassmorphism -->
     <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 shadow-xs transition-all duration-300">
@@ -94,19 +94,19 @@
             <!-- Interactive Pill Tag -->
             <div class="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500/10 via-blue-500/10 to-indigo-500/10 text-sky-700 border border-sky-200/80 text-xs font-extrabold px-4 py-2 rounded-full uppercase tracking-widest mb-8 shadow-xs backdrop-blur-md hover:scale-105 transition-transform duration-300 cursor-default">
                 <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse shadow-sm shadow-sky-500"></span>
-                <span>Website Resmi Koperasi Tradevis</span>
+                <span>Website Resmi Tradevis Koperasi</span>
                 <span class="bg-sky-500/20 text-sky-800 text-[10px] px-2 py-0.5 rounded-full font-black">2026</span>
             </div>
 
             <!-- Headline Utama -->
             <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-tdkop-navy tracking-tight leading-[1.1] mb-6">
                 Pesan Seragam & Peralatan <br class="hidden md:inline" />
-                Tanpa Antre di <span class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-800 bg-clip-text text-transparent drop-shadow-xs">TDKop</span>
+                Tanpa Antri di <span class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-800 bg-clip-text text-transparent drop-shadow-xs">TDKop</span>
             </h1>
 
             <!-- Deskripsi Interaktif -->
             <p class="text-slate-600 max-w-2xl mx-auto text-base sm:text-lg md:text-xl leading-relaxed mb-10 font-medium">
-                Pengalaman belanja kebutuhan <span class="text-tdkop-navy font-bold underline decoration-sky-400/60 decoration-2 underline-offset-4">SMK Negeri 8 Jakarta</span> yang serba cepat. Cek stok ukuran secara , amankan pesananmu, tinggal ambil!
+                Pengalaman belanja kebutuhan siswa/siswi <span class="text-tdkop-navy font-bold underline decoration-sky-400/60 decoration-2 underline-offset-4">SMK Negeri 8 Jakarta</span> yang serba cepat. Cek stok ukuran sekarang juga, amankan pesananmu, tinggal ambil <span class="font-bold text-red-700">!</span>
             </p>
 
             <!-- Action Call-To-Action (CTA) Buttons -->
@@ -144,7 +144,7 @@
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 border border-sky-200 text-sky-700 text-xs font-bold uppercase tracking-wider mb-2">
                         <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span> Katalog Produk Koperasi
                     </div>
-                    <p class="text-slate-500 text-xs sm:text-sm mt-1 font-medium">Pilih produk dan cek ketersediaan ukurannya secara presisi</p>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-1 font-medium">Pilih produk dan cek ketersediaan ukurannya sekarang !</p>
                 </div>
 
                 <!-- Search & Filter Form -->
@@ -411,7 +411,7 @@
                     Tim Developer <span class="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">TDKop</span>
                 </h2>
                 <p class="text-slate-500 text-xs sm:text-sm mt-2.5 max-w-lg mx-auto leading-relaxed font-medium">
-                    Kolaborasi talenta muda SMK Negeri 8 Jakarta dalam menghadirkan pengalaman belanja koperasi sekolah yang modern dan serba cepat.
+                    Kolaborasi Skill siswa SMK Negeri 8 Jakarta dalam menghadirkan pengalaman belanja koperasi sekolah yang modern dan serba cepat.
                 </p>
             </div>
 
@@ -543,7 +543,7 @@
                 <div>
                     <span class="inline-block px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-semibold rounded-full mb-2">TDKop : Koperasi Modern SMK 8</span>
                     <h3 class="text-lg sm:text-xl font-bold text-white tracking-tight">Belanja Kebutuhan Sekolah Lebih Praktis & Cepat</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Gunakan website TDKop untuk melakukan pemesanan seragam dan atribut sekolah tanpa harus repot mengantre.</p>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Gunakan website TDKop untuk melakukan pemesanan seragam dan atribut sekolah tanpa harus repot mengantri.</p>
                 </div>
                 <a href="#katalog" class="shrink-0 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-2xl shadow-lg shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 group">
                     <span>Jelajahi Katalog</span>
@@ -564,12 +564,12 @@
                         </div>
                     </div>
                     <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                        Sistem pemesanan digital resmi Koperasi SMK Negeri 8 Jakarta. Belanja seragam & peralatan sekolah tanpa antre.
+                        Sistem pemesanan digital resmi Koperasi SMK Negeri 8 Jakarta. Belanja seragam & peralatan sekolah tanpa antri.
                     </p>
                     <!-- Status Badge -->
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-xl">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                        <span>Sistem Digital Active</span>
+                        <span>Sistem Koperasi Digital Aktif</span>
                     </div>
                 </div>
 
