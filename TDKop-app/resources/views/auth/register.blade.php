@@ -171,7 +171,7 @@
                                     <path d="M6 16h4" />
                                 </svg>
                             </span>
-                            <input type="text" name="nis" value="{{ old('nis') }}" placeholder="Contoh : 19440" required
+                            <input type="number" name="nis" value="{{ old('nis') }}" placeholder="Contoh : 19440" required inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                 class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm outline-none transition-all duration-300 ease-out hover:border-tdkop-primary hover:shadow-sm focus:ring-2 focus:ring-tdkop-primary/40 focus:border-tdkop-primary focus:scale-[1.01]">
                         </div>
                     </div>

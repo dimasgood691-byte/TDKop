@@ -11,9 +11,10 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('nis')->nullable()->unique(); // Nullable untuk Guru/Admin
-            $table->string('class')->nullable();         // Nullable untuk Guru/Admin (e.g. X RPL 1)
-            $table->string('major')->nullable();         // Nullable untuk Guru/Admin (e.g. RPL, TKJ)
+            $table->bigInteger('nis')->unsigned()->nullable()->unique(); // <-- Diubah ke BigInteger (Khusus Angka)
+            $table->string('class')->nullable();
+            $table->string('major')->nullable();
+            $table->enum('gender', ['L', 'P'])->nullable();            // <-- Ditambahkan kolom Gender
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            // Menambahkan kolom gender ('L' atau 'P') setelah kolom email
-            $table->enum('gender', ['L', 'P'])->nullable()->after('email');
-        });
+        if (!Schema::hasColumn('users', 'gender')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->enum('gender', ['L', 'P'])->nullable()->after('email');
+            });
+        }
     }
 
     /**

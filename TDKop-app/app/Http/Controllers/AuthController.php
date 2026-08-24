@@ -57,10 +57,10 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name'     => 'required|string|max:255',
-            'nis'      => 'required|string|max:50|unique:users,nis',
+            'nis'      => 'required|numeric|digits_between:4,20|unique:users,nis', // <-- GANTI DI SINI
             'class'    => 'required|string|max:50',
             'major'    => 'required|string|max:100',
-            'gender'   => 'required|in:L,P', // <-- Validasi Jenis Kelamin (L/P)
+            'gender'   => 'required|in:L,P',
             'username' => 'required|string|max:50|unique:users,username',
             'email'    => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
