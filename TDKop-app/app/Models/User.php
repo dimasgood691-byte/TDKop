@@ -22,7 +22,7 @@ class User extends Authenticatable
         'major',
         'username',
         'email',
-        'gender', // <--- Kolom gender ditambahkan di sini
+        'gender',
         'password',
         'points',
     ];

@@ -57,7 +57,7 @@
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10">
                 <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-2">
-                    Halo, {{ auth()->user()->name }}! 👋
+                    Halo, {{ auth()->user()->name }}!
                 </h1>
                 <p class="text-slate-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
                     Kelola pesanan siswa, pantau grafik penjualan, pantau stok barang, dan perbarui katalog produk Koperasi SMK 8 dengan cepat dan praktis dari website ini.

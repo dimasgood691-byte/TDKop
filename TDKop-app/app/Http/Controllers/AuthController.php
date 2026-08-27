@@ -33,12 +33,12 @@ class AuthController extends Controller
                 || Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'guru'], $remember);
 
             if ($authenticated) {
-                $request->session()->regenerate(); // Regenerasi session ID demi keamanan
+                $request->session()->regenerate();
                 return redirect()->intended(route('admin.dashboard'));
             }
         } else {
             if (Auth::attempt(['username' => $username, 'password' => $password, 'role' => 'siswa'], $remember)) {
-                $request->session()->regenerate(); // Regenerasi session ID demi keamanan
+                $request->session()->regenerate();
                 return redirect()->intended(route('siswa.dashboard'));
             }
         }
@@ -57,7 +57,7 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name'     => 'required|string|max:255',
-            'nis'      => 'required|numeric|digits_between:4,20|unique:users,nis', // <-- GANTI DI SINI
+            'nis'      => 'required|numeric|digits_between:4,20|unique:users,nis',
             'class'    => 'required|string|max:50',
             'major'    => 'required|string|max:100',
             'gender'   => 'required|in:L,P',
@@ -72,7 +72,7 @@ class AuthController extends Controller
             'nis'      => $data['nis'],
             'class'    => $data['class'],
             'major'    => $data['major'],
-            'gender'   => $data['gender'], // <-- Menyimpan input Gender ke database
+            'gender'   => $data['gender'],
             'username' => $data['username'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),

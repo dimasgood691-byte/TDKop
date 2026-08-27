@@ -102,7 +102,7 @@
                 </a>
 
                 <h1 class="text-2xl sm:text-3xl font-bold text-tdkop-navy flex items-center gap-2">
-                    Selamat datang <span>👋</span>
+                    Selamat datang
                 </h1>
                 <p class="text-slate-500 text-sm mt-1 mb-6">Masuk ke akun Anda untuk melanjutkan</p>
 

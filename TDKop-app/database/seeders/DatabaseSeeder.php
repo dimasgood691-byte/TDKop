@@ -26,8 +26,6 @@ class DatabaseSeeder extends Seeder
 
         // 2. Seed Categories
         $catSeragam   = Category::create(['name' => 'Seragam Sekolah', 'slug' => 'seragam-sekolah']);
-        $catAtribut   = Category::create(['name' => 'Atribut & Badge', 'slug' => 'atribut-badge']);
-        $catPerlengkapan = Category::create(['name' => 'Perlengkapan Belajar', 'slug' => 'perlengkapan-belajar']);
 
         // 3. Seed Sizes
         $sizes = [

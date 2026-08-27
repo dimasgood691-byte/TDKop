@@ -66,7 +66,6 @@ class SiswaController extends Controller
 
     public function removeFromCart($id)
     {
-        // Dipastikan hanya bisa menghapus item keranjang milik sendiri
         Cart::where('user_id', Auth::id())->where('id', $id)->delete();
         return back()->with('success', 'Barang berhasil dihapus dari keranjang.');
     }

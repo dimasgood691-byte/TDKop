@@ -70,7 +70,7 @@
                 <div class="absolute bottom-0 right-32 w-40 h-40 rounded-full bg-blue-300 opacity-10 blur-2xl"></div>
 
                 <div class="relative z-10">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Halo, {{ auth()->user()->name }}! 👋</h2>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">Halo, {{ auth()->user()->name }}!</h2>
                     <p class="text-blue-100 text-sm sm:text-base max-w-xl">Penuhi Seragam dan perlengkapan sekolahmu dengan mudah di TDKop. Belanja sekarang, kumpulkan poinnya, dan tukarkan dengan hadiah menarik <span class="font-bold text-red-700">!!!</span></p>
                 </div>
             </div>
@@ -532,7 +532,6 @@
                 transform: translateY(-15%);
             }
         }
-Abang I want I Bang, then the bang. Bang, then the Bang. Bang. Bang. Bang. I just want to say You can make a This Most of the I mean, Yeah, I'm like Yeah, Oh, I Oh, And that, I think, what? Yeah. I'm a student too. I'm a student too. I'm a student too. What? Baju otak Baju Ana, eh, got Oh, bring back the bun, though.
         .animate-bounce-short {
             animation: bounce-short 1s ease-in-out 3;
         }
