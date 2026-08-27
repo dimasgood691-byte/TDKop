@@ -532,7 +532,7 @@
                 transform: translateY(-15%);
             }
         }
-
+Abang I want I Bang, then the bang. Bang, then the Bang. Bang. Bang. Bang. I just want to say You can make a This Most of the I mean, Yeah, I'm like Yeah, Oh, I Oh, And that, I think, what? Yeah. I'm a student too. I'm a student too. I'm a student too. What? Baju otak Baju Ana, eh, got Oh, bring back the bun, though.
         .animate-bounce-short {
             animation: bounce-short 1s ease-in-out 3;
         }

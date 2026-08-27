@@ -11,19 +11,19 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 
-// Landing Page
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Auth Routes (Dilindungi Throttling / Rate Limiting untuk Cegah Brute Force)
+
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLogin')->name('login');
-    Route::post('/login', 'login')->middleware('throttle:5,1'); // Maksimal 5x coba per menit
+    Route::post('/login', 'login')->middleware('throttle:5,1');
     Route::post('/logout', 'logout')->name('logout');
     Route::get('/register', 'showRegister')->name('register');
-    Route::post('/register', 'register')->middleware('throttle:3,1'); // Maksimal 3x pendaftaran per menit
+    Route::post('/register', 'register')->middleware('throttle:3,1');
 });
 
-// Fitur Lupa Kata Sandi (Password Reset)
+
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', function () {
         return view('auth.forgot-password');
@@ -69,7 +69,7 @@ Route::middleware('guest')->group(function () {
     })->middleware('throttle:5,1')->name('password.update');
 });
 
-// Area Siswa
+
 Route::middleware(['auth', 'role:siswa'])->prefix('dashboard/siswa')->group(function () {
     Route::get('/', [SiswaController::class, 'index'])->name('siswa.dashboard');
     Route::post('/cart/add', [SiswaController::class, 'addToCart'])->name('siswa.cart.add');
@@ -77,7 +77,7 @@ Route::middleware(['auth', 'role:siswa'])->prefix('dashboard/siswa')->group(func
     Route::post('/checkout', [SiswaController::class, 'checkout'])->name('siswa.checkout');
 });
 
-// Area Admin/Guru
+
 Route::middleware(['auth', 'role:admin,guru'])->prefix('dashboard/admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::patch('/order/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.order.updateStatus');
@@ -88,7 +88,7 @@ Route::middleware(['auth', 'role:admin,guru'])->prefix('dashboard/admin')->group
     Route::patch('/product/{id}/image', [AdminController::class, 'updateProductImage'])->name('admin.product.image.update');
 });
 
-// Cetak Struk / Receipt
+
 Route::middleware('auth')->group(function () {
     Route::get('/order/{id}/receipt', [SiswaController::class, 'printReceipt'])->name('order.receipt');
 });

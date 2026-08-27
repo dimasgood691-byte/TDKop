@@ -5,17 +5,17 @@
     --font-sans: 'Inter', sans-serif;
     --font-heading: 'Plus Jakarta Sans', sans-serif;
 
-    /* Color Palette 60-30-10 TDKop */
+
     --color-tdkop-bg: #F8FAFC;
-    /* 60% Dominan: Slate Very Light */
+
     --color-tdkop-navy: #0F172A;
-    /* 30% Sekunder: Slate Dark */
+
     --color-tdkop-primary: #1E40AF;
-    /* 30% Sekunder: Royal Blue Utama */
+
     --color-tdkop-accent: #0EA5E9;
-    /* 10% Aksen: Sky Blue Accent */
+
     --color-tdkop-gold: #F59E0B;
-    /* 10% Aksen Tambahan: Warm Gold */
+
 }
 
 body {
