@@ -109,6 +109,22 @@ php artisan storage:link
 
 ---
 
+### 7. Instalasi Semua Library Sekaligus
+
+Jika package belum tersedia, seluruh library frontend dapat diinstall sekaligus menggunakan:
+```bash
+npm install tailwindcss @tailwindcss/vite chart.js aos axios alpinejs
+```
+Kemudian jalankan:
+```bash
+npm install
+```
+
+Jika project sudah memiliki package.json yang berisi dependency tersebut, cukup jalankan:
+```bash
+npm install
+```
+
 ## Menjalankan Aplikasi
 
 Buka dua terminal terpisah dan jalankan perintah berikut:
