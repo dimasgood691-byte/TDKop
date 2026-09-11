@@ -234,15 +234,20 @@
                                     {{ $product->description }}
                                 </p>
 
-                                    <div class="flex flex-wrap gap-1.5 mt-3">
-                                        @forelse($product->stocks as $stock)
-                                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg border {{ $stock->size->gender_label === 'Laki-laki' ? 'bg-sky-50 text-sky-700 border-sky-100' : ($stock->size->gender_label === 'Perempuan' ? 'bg-pink-50 text-pink-700 border-pink-100' : 'bg-slate-50 text-slate-600 border-slate-200') }}">
-                                            {{ $stock->size->display_name }}
-                                        </span>
-                                        @empty
-                                        <span class="text-[10px] text-slate-400">Ukuran belum tersedia</span>
-                                        @endforelse
-                                    </div>
+                                <!-- Informasi Stok Tersedia -->
+                                @php
+                                $totalStock = $product->stocks->sum('stock');
+                                @endphp
+                                <div class="mt-3 flex items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg border {{ $totalStock > 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200' }}">
+                                        <span class="w-1.5 h-1.5 rounded-full {{ $totalStock > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500' }}"></span>
+                                        @if($totalStock > 0)
+                                        Stok Tersedia: <span class="font-black ml-0.5">{{ $totalStock }}</span>
+                                        @else
+                                        Stok Habis
+                                        @endif
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -275,253 +280,280 @@
                 </div>
                 @endforelse
             </div>
-        </div>
 
-        <!-- Modal Detail Stok -->
-        <div x-show="showModal"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
-            style="display: none;">
-
-            <div @click.away="showModal = false" class="relative z-10 bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-                <button @click.stop="showModal = false" class="absolute top-5 right-5 z-20 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold transition-all duration-200 flex items-center justify-center">✕</button>
-
-                <template x-if="selectedProduct">
-                    <div>
-                        <!-- Modal Image Banner -->
-                        <div class="w-full h-48 bg-slate-100 rounded-2xl overflow-hidden mb-5 border border-slate-100 relative group cursor-pointer"
-                            @click="selectedImage = '/storage/' + selectedProduct.image; showImageModal = true">
-                            <template x-if="selectedProduct.image">
-                                <div class="relative w-full h-full">
-                                    <img :src="'/storage/' + selectedProduct.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                    <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                        <span class="text-xs text-white bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-xs font-semibold">Klik untuk Melihat</span>
-                                    </div>
-                                </div>
-                            </template>
-                            <template x-if="!selectedProduct.image">
-                                <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50">
-                                    <svg class="w-8 h-8 mb-1 opacity-75" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m-9-9l9 5.25" />
-                                    </svg>
-                                    <span class="text-xs font-semibold">Belum Ada Foto</span>
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- Details -->
-                        <span class="text-[10px] font-bold text-sky-700 uppercase tracking-wider bg-sky-50 px-3 py-1 rounded-md border border-sky-100" x-text="selectedProduct.category.name"></span>
-                        <h3 class="text-xl font-black text-tdkop-navy mt-2 leading-snug" x-text="selectedProduct.name"></h3>
-                        <p class="text-slate-500 text-xs leading-relaxed mt-1.5" x-text="selectedProduct.description"></p>
-
-                        <!-- Price Box -->
-                        <div class="mt-4 p-3.5 bg-sky-50/60 rounded-2xl border border-sky-100 flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-500">Harga Satuan</span>
-                            <span class="text-xl font-black text-tdkop-primary" x-text="'Rp ' + new Intl.NumberFormat('id-ID').format(selectedProduct.price)"></span>
-                        </div>
-
-                        <hr class="my-5 border-slate-100" />
-
-                        <!-- Stock Status Title -->
-                        <h4 class="font-bold text-tdkop-navy text-sm mb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-tdkop-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                            Stok Ukuran Tersedia:
-                        </h4>
-
-                        <!-- Stock List -->
-                        <div class="space-y-2 max-h-44 overflow-y-auto pr-1">
-                            <template x-for="item in selectedProduct.stocks" :key="item.id">
-                                <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm hover:bg-slate-100/80 transition-colors gap-3">
-                                    <span class="font-bold text-slate-700" x-text="'Ukuran ' + item.size.name + ' (' + (item.size.gender === 'laki-laki' ? 'Laki-laki' : item.size.gender === 'perempuan' ? 'Perempuan' : 'Umum') + ')' "></span>
-                                    <span :class="item.stock > 0 ? 'bg-emerald-100/80 text-emerald-800 border-emerald-200' : 'bg-rose-100/80 text-rose-700 border-rose-200'"
-                                        class="px-3 py-1 rounded-lg text-xs font-extrabold border whitespace-nowrap"
-                                        x-text="item.stock > 0 ? item.stock + ' Pcs' : 'Habis'"></span>
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- Call to Action -->
-                        <div class="mt-6">
-                            @auth
-                            @if(auth()->user()->role === 'siswa')
-                            <a href="{{ url('dashboard/siswa') }}" class="block text-center w-full bg-tdkop-primary hover:bg-blue-800 text-white py-3.5 rounded-xl font-bold transition-all duration-300 active:scale-95 shadow-md shadow-blue-900/20">
-                                Pesan Sekarang (di Dashboard)
-                            </a>
-                            @else
-                            <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
-                                <p class="text-xs font-semibold text-amber-700">Login sebagai Siswa untuk memesan produk ini.</p>
-                            </div>
-                            @endif
-                            @else
-                            <a href="{{ route('login') }}" class="block text-center w-full bg-tdkop-primary hover:bg-blue-800 text-white py-3.5 rounded-xl font-bold transition-all duration-300 active:scale-95 shadow-md shadow-blue-900/20">
-                                Login untuk Memesan
-                            </a>
-                            @endauth
-                        </div>
-                    </div>
-                </template>
-            </div>
-        </div>
-
-        <!-- Modal Fullscreen Image -->
-        <div x-show="showImageModal"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-[90] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
-            style="display: none;">
-
-            <button @click.stop="showImageModal = false" class="absolute top-5 right-5 sm:top-8 sm:right-8 z-[100] w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 font-bold transition-all duration-200 flex items-center justify-center backdrop-blur-md shadow-lg">
-                ✕
-            </button>
-
-            <div @click.away="showImageModal = false" class="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center"
-                x-transition:enter="transition ease-out duration-300 delay-100"
+            <!-- Modal Detail Stok -->
+            <div x-show="showModal"
+                x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100">
-                <img :src="selectedImage" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/20">
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+                style="display: none;">
+
+                <div @click.away="showModal = false" class="relative z-10 bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+                    <button @click.stop="showModal = false" class="absolute top-5 right-5 z-20 w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 hover:bg-slate-200 font-bold transition-all duration-200 flex items-center justify-center">✕</button>
+
+                    <template x-if="selectedProduct">
+                        <div>
+                            <!-- Modal Image Banner -->
+                            <div class="w-full h-48 bg-slate-100 rounded-2xl overflow-hidden mb-5 border border-slate-100 relative group cursor-pointer"
+                                @click="selectedImage = '/storage/' + selectedProduct.image; showImageModal = true">
+                                <template x-if="selectedProduct.image">
+                                    <div class="relative w-full h-full">
+                                        <img :src="'/storage/' + selectedProduct.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                            <span class="text-xs text-white bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-xs font-semibold">Klik untuk Melihat</span>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template x-if="!selectedProduct.image">
+                                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50">
+                                        <svg class="w-8 h-8 mb-1 opacity-75" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m-9-9l9 5.25" />
+                                        </svg>
+                                        <span class="text-xs font-semibold">Belum Ada Foto</span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Details -->
+                            <span class="text-[10px] font-bold text-sky-700 uppercase tracking-wider bg-sky-50 px-3 py-1 rounded-md border border-sky-100" x-text="selectedProduct.category.name"></span>
+                            <h3 class="text-xl font-black text-tdkop-navy mt-2 leading-snug" x-text="selectedProduct.name"></h3>
+                            <p class="text-slate-500 text-xs leading-relaxed mt-1.5" x-text="selectedProduct.description"></p>
+
+                            <!-- Price Box -->
+                            <div class="mt-4 p-3.5 bg-sky-50/60 rounded-2xl border border-sky-100 flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-500">Harga Satuan</span>
+                                <span class="text-xl font-black text-tdkop-primary" x-text="'Rp ' + new Intl.NumberFormat('id-ID').format(selectedProduct.price)"></span>
+                            </div>
+
+                            <hr class="my-5 border-slate-100" />
+
+                            <!-- Stock Status Title -->
+                            <h4 class="font-bold text-tdkop-navy text-sm mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-tdkop-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                                Stok Ukuran Tersedia:
+                            </h4>
+
+                            <!-- Stock List -->
+                            <div class="space-y-2 max-h-44 overflow-y-auto pr-1">
+                                <template x-for="item in selectedProduct.stocks" :key="item.id">
+                                    <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm hover:bg-slate-100/80 transition-colors gap-3">
+                                        <span class="font-bold text-slate-700" x-text="'Ukuran ' + item.size.name + ' (' + (item.size.gender === 'laki-laki' ? 'Laki-laki' : item.size.gender === 'perempuan' ? 'Perempuan' : 'Umum') + ')' "></span>
+                                        <span :class="item.stock > 0 ? 'bg-emerald-100/80 text-emerald-800 border-emerald-200' : 'bg-rose-100/80 text-rose-700 border-rose-200'"
+                                            class="px-3 py-1 rounded-lg text-xs font-extrabold border whitespace-nowrap"
+                                            x-text="item.stock > 0 ? item.stock + ' Pcs' : 'Habis'"></span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Call to Action -->
+                            <div class="mt-6">
+                                @auth
+                                @if(auth()->user()->role === 'siswa')
+                                <a href="{{ url('dashboard/siswa') }}" class="block text-center w-full bg-tdkop-primary hover:bg-blue-800 text-white py-3.5 rounded-xl font-bold transition-all duration-300 active:scale-95 shadow-md shadow-blue-900/20">
+                                    Pesan Sekarang (di Dashboard)
+                                </a>
+                                @else
+                                <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
+                                    <p class="text-xs font-semibold text-amber-700">Login sebagai Siswa untuk memesan produk ini.</p>
+                                </div>
+                                @endif
+                                @else
+                                <a href="{{ route('login') }}" class="block text-center w-full bg-tdkop-primary hover:bg-blue-800 text-white py-3.5 rounded-xl font-bold transition-all duration-300 active:scale-95 shadow-md shadow-blue-900/20">
+                                    Login untuk Memesan
+                                </a>
+                                @endauth
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
-        </div>
+
+            <!-- Modal Fullscreen Image -->
+            <div x-show="showImageModal"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed inset-0 z-[90] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4"
+                style="display: none;">
+
+                <button @click.stop="showImageModal = false" class="absolute top-5 right-5 sm:top-8 sm:right-8 z-[100] w-10 h-10 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 font-bold transition-all duration-200 flex items-center justify-center backdrop-blur-md shadow-lg">
+                    ✕
+                </button>
+
+                <div @click.away="showImageModal = false" class="relative max-w-5xl w-full max-h-[90vh] flex items-center justify-center"
+                    x-transition:enter="transition ease-out duration-300 delay-100"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100">
+                    <img :src="selectedImage" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/20">
+                </div>
+            </div>
     </section>
 
     <!-- Section Tim Developer -->
-    <section class="py-20 bg-white text-slate-800 relative overflow-hidden">
-        <!-- Ambient Glow Background -->
-        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(14,165,233,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,165,233,0.03)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] pointer-events-none"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-tr from-sky-400/20 via-blue-600/15 to-indigo-900/20 rounded-full blur-3xl pointer-events-none"></div>
+    <section class="py-16 bg-slate-50/50 text-slate-800 relative overflow-hidden">
+        <!-- Ambient Pattern & Glow Background -->
+        <div class="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-60 pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-tr from-sky-400/20 via-blue-500/15 to-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
             <!-- Header Section -->
             <div class="text-center mb-12" data-aos="fade-up">
-                <div class="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500/10 via-blue-500/10 to-indigo-500/10 text-sky-700 border border-sky-200/60 text-[11px] font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider mb-3 shadow-xs">
+                <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md text-sky-700 border border-sky-200/80 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider mb-3 shadow-xs">
                     <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span> Sosok Dibalik Layar
                 </div>
                 <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-tdkop-navy tracking-tight">
                     Tim Developer <span class="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">TDKop</span>
                 </h2>
-                <p class="text-slate-500 text-xs sm:text-sm mt-2.5 max-w-lg mx-auto leading-relaxed font-medium">
-                    Kolaborasi Skill siswa SMK Negeri 8 Jakarta dalam menghadirkan pengalaman belanja koperasi sekolah yang modern dan serba cepat.
+                <p class="text-slate-500 text-xs sm:text-sm mt-2 max-w-lg mx-auto leading-relaxed font-medium">
+                    Siswa XI RPL SMKN 8 Jakarta yang mengembangkan platform koperasi sekolah modern.
                 </p>
             </div>
 
-            <!-- Grid Cards Developer -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+            <!-- Medium-Sized & Interactive Developer Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 
                 <!-- Anggota 1 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="100">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
-                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                <div class="group relative bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="100">
+                    <!-- Top Badge Role -->
+                    <div class="absolute top-3 left-3 z-20">
+                        <span class="text-[10px] font-black text-sky-700 bg-sky-50/90 backdrop-blur-xs border border-sky-200/80 px-2.5 py-1 rounded-md uppercase tracking-wider">Fullstack</span>
+                    </div>
+
+                    <!-- Photo Avatar Container -->
+                    <div class="relative w-28 h-28 sm:w-32 sm:h-32 mt-2 mb-4 rounded-full p-1 bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 group-hover:rotate-6 transition-transform duration-500">
+                        <div class="w-full h-full rounded-full overflow-hidden bg-slate-100 relative">
                             <img src="{{ asset('images/11 DIMAS PUTRA MADIADIPURA IMG_0645.JPG') }}" alt="Dimas Putra Madiadipura"
-                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
                                 onerror="this.src='https://ui-avatars.com/api/?name=Dimas+Putra+Madiadipura&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">Fullstack Developer</span>
-                            </div>
                         </div>
-                        <div class="p-5 text-left">
-                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">Fullstack</span>
-                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors leading-tight">Dimas Putra Madiadipura</h3>
-                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
-                                </p>
-                            </div>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="w-full px-1">
+                        <h3 class="font-extrabold text-tdkop-navy text-sm sm:text-base group-hover:text-blue-600 transition-colors line-clamp-1" title="Dimas Putra Madiadipura">
+                            Dimas Putra M.
+                        </h3>
+                        <p class="text-xs font-medium text-slate-400 mt-1 line-clamp-1">
+                            XI RPL • SMKN 8 Jakarta
+                        </p>
+
+                        <!-- Hover Skill Tag / Status -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center">
+                            <span class="text-xs font-semibold text-slate-500 group-hover:text-sky-600 flex items-center gap-1.5 transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Fullstack Dev
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Anggota 2 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="200">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
-                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                <div class="group relative bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="200">
+                    <!-- Top Badge Role -->
+                    <div class="absolute top-3 left-3 z-20">
+                        <span class="text-[10px] font-black text-sky-700 bg-sky-50/90 backdrop-blur-xs border border-sky-200/80 px-2.5 py-1 rounded-md uppercase tracking-wider">UI / UX</span>
+                    </div>
+
+                    <!-- Photo Avatar Container -->
+                    <div class="relative w-28 h-28 sm:w-32 sm:h-32 mt-2 mb-4 rounded-full p-1 bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 group-hover:-rotate-6 transition-transform duration-500">
+                        <div class="w-full h-full rounded-full overflow-hidden bg-slate-100 relative">
                             <img src="{{ asset('images/20 MOCHAMAD BILAL RABANI IMG_0654.jpg') }}" alt="Mochamad Bilal Rabani"
-                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
                                 onerror="this.src='https://ui-avatars.com/api/?name=Bilal+Rabani&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">UI/UX Maestro</span>
-                            </div>
                         </div>
-                        <div class="p-5 text-left">
-                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">Frontend / UI UX</span>
-                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors truncate">Mochamad Bilal Rabani</h3>
-                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
-                                </p>
-                            </div>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="w-full px-1">
+                        <h3 class="font-extrabold text-tdkop-navy text-sm sm:text-base group-hover:text-blue-600 transition-colors line-clamp-1" title="Mochamad Bilal Rabani">
+                            Mochamad Bilal R.
+                        </h3>
+                        <p class="text-xs font-medium text-slate-400 mt-1 line-clamp-1">
+                            XI RPL • SMKN 8 Jakarta
+                        </p>
+
+                        <!-- Hover Skill Tag / Status -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center">
+                            <span class="text-xs font-semibold text-slate-500 group-hover:text-sky-600 flex items-center gap-1.5 transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Frontend / UI UX
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Anggota 3 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="300">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
-                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                <div class="group relative bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="300">
+                    <!-- Top Badge Role -->
+                    <div class="absolute top-3 left-3 z-20">
+                        <span class="text-[10px] font-black text-sky-700 bg-sky-50/90 backdrop-blur-xs border border-sky-200/80 px-2.5 py-1 rounded-md uppercase tracking-wider">Frontend</span>
+                    </div>
+
+                    <!-- Photo Avatar Container -->
+                    <div class="relative w-28 h-28 sm:w-32 sm:h-32 mt-2 mb-4 rounded-full p-1 bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 group-hover:rotate-6 transition-transform duration-500">
+                        <div class="w-full h-full rounded-full overflow-hidden bg-slate-100 relative">
                             <img src="{{ asset('images/7 AULANDRA RIDWAN IMG_0641.jpg') }}" alt="Aulandra Ridwan"
-                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
                                 onerror="this.src='https://ui-avatars.com/api/?name=Aulandra+Ridwan&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">FrontEnd Dev</span>
-                            </div>
                         </div>
-                        <div class="p-5 text-left">
-                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">FrontEnd Developer</span>
-                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors truncate">Aulandra Ridwan</h3>
-                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
-                                </p>
-                            </div>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="w-full px-1">
+                        <h3 class="font-extrabold text-tdkop-navy text-sm sm:text-base group-hover:text-blue-600 transition-colors line-clamp-1" title="Aulandra Ridwan">
+                            Aulandra Ridwan
+                        </h3>
+                        <p class="text-xs font-medium text-slate-400 mt-1 line-clamp-1">
+                            XI RPL • SMKN 8 Jakarta
+                        </p>
+
+                        <!-- Hover Skill Tag / Status -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center">
+                            <span class="text-xs font-semibold text-slate-500 group-hover:text-sky-600 flex items-center gap-1.5 transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Frontend Dev
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Anggota 4 -->
-                <div class="relative group" data-aos="fade-up" data-aos-delay="400">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-600 rounded-2xl blur-sm opacity-0 group-hover:opacity-60 transition duration-300"></div>
-                    <div class="relative bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xs group-hover:shadow-xl transition-all duration-300">
-                        <div class="h-64 sm:h-72 bg-slate-100 relative overflow-hidden group/photo">
+                <div class="group relative bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="400">
+                    <!-- Top Badge Role -->
+                    <div class="absolute top-3 left-3 z-20">
+                        <span class="text-[10px] font-black text-sky-700 bg-sky-50/90 backdrop-blur-xs border border-sky-200/80 px-2.5 py-1 rounded-md uppercase tracking-wider">Data</span>
+                    </div>
+
+                    <!-- Photo Avatar Container -->
+                    <div class="relative w-28 h-28 sm:w-32 sm:h-32 mt-2 mb-4 rounded-full p-1 bg-gradient-to-tr from-sky-400 via-blue-500 to-indigo-600 group-hover:-rotate-6 transition-transform duration-500">
+                        <div class="w-full h-full rounded-full overflow-hidden bg-slate-100 relative">
                             <img src="{{ asset('images/9 BIMA TEGAR SAPUTRA IMG_0643.jpg') }}" alt="Bima Tegar Saputra"
-                                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover/photo:scale-105"
+                                class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
                                 onerror="this.src='https://ui-avatars.com/api/?name=Bima+Tegar+Saputra&background=1E3A8A&color=fff&size=256'">
-                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center p-2">
-                                <span class="text-xs font-bold text-white bg-slate-900/80 backdrop-blur-xs px-3 py-1.5 rounded-md border border-white/20">Data Strategy</span>
-                            </div>
                         </div>
-                        <div class="p-5 text-left">
-                            <span class="text-sky-700 text-[11px] font-bold bg-sky-50 py-1 px-2.5 rounded-md border border-sky-100 inline-block uppercase tracking-wider mb-2">Data Analyst</span>
-                            <h3 class="font-extrabold text-tdkop-navy text-base sm:text-lg group-hover:text-blue-600 transition-colors truncate">Bima Tegar Saputra</h3>
-                            <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-slate-600 text-xs font-medium">
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> XI Rekayasa Perangkat Lunak
-                                </p>
-                                <p class="flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SMKN 8 Jakarta
-                                </p>
-                            </div>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="w-full px-1">
+                        <h3 class="font-extrabold text-tdkop-navy text-sm sm:text-base group-hover:text-blue-600 transition-colors line-clamp-1" title="Bima Tegar Saputra">
+                            Bima Tegar S.
+                        </h3>
+                        <p class="text-xs font-medium text-slate-400 mt-1 line-clamp-1">
+                            XI RPL • SMKN 8 Jakarta
+                        </p>
+
+                        <!-- Hover Skill Tag / Status -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center">
+                            <span class="text-xs font-semibold text-slate-500 group-hover:text-sky-600 flex items-center gap-1.5 transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Data Analyst
+                            </span>
                         </div>
                     </div>
                 </div>
